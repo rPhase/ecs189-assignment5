@@ -2,7 +2,7 @@
 var express = require('express');
 var formidable = require('formidable');  // we upload images in forms
 var DBop = require("./DBop");
-// var queries = require("./queries");
+var queries = require("./queries");
 // this is good for parsing forms and reading in the images
 
 // make a new express server object
@@ -21,7 +21,7 @@ app.get('/change', function (request, response){
     query = request.url.split("?")[1]; // get query string
 		console.log(query);
     if (query) {
-			answer2(query, response);
+			queries.answer(query, response);
     } else {
 			sendCode(400,response,'query not recognized');
     }
