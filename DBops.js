@@ -12,7 +12,7 @@ function errorCallback(err) {
 	console.log("error: ",err,"\n");
     }
 }
-	
+
 function dataCallback(err, tableData) {
     if (err) {
 	console.log("error: ",err,"\n");
@@ -24,7 +24,7 @@ function dataCallback(err, tableData) {
 // uncomment this line to see behavior when each opeartion is forced
 // to complete it's callback before the next one starts
 // You also need to uncomment a line at the bottom of this file
-//db.serialize( function () {
+db.serialize( function () {
 
 console.log("starting DB operations");
 
@@ -51,7 +51,7 @@ console.log("starting DB operations");
 
 /* Some more examples of database commands you could try
 
-    // Dump whole database 
+    // Dump whole database
     // db.all('SELECT * FROM photoLabels',dataCallback);
 
     // fill-in-the-blanks syntax for Update command
@@ -63,7 +63,7 @@ console.log("starting DB operations");
 	'UPDATE photoLabels SET labels = ? WHERE fileName = ? ',
 	[ 'Habitat, Vegetation, Natural Environment, Woodland, Tree, Forest, Green, Ecosystem, Rainforest, Old Growth Forest', 'redwoods.jpg'],errorCallback);
 
-    // Getting all rows where a substring of the "labels" field 
+    // Getting all rows where a substring of the "labels" field
     // matches the string "Bird"
     db.all(
 	'SELECT * FROM photoLabels WHERE labels LIKE  ?',
@@ -73,5 +73,5 @@ console.log("starting DB operations");
     db.close();
 
 // You need to uncomment the line below when you uncomment the call
-// to db.serialize 
-// });
+// to db.serialize
+});
