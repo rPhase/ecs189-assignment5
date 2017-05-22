@@ -105,11 +105,12 @@ function answer(query, response) {
 						console.log("error: ",err,"\n");
 					} else {
 						// good response...so let's update labels
+						arrayLabel = arrayLabel.splice(indexLabel, 1);
 						var arrLength = arrayLabel.length;
 						if (arrLength == 1) {
 							arrLength = 0;
 						}
-						arrayLabel = arrayLabel.splice(indexLabel, 1);
+						console.log(arrLength);
 						console.log(arrayLabel);
 						var labelString = "";
 						for (i = 0; i < arrLength; i++) {
@@ -138,7 +139,7 @@ function answer(query, response) {
 					// send a nice response back to browser
 					response.status(200);
 					response.type("text/plain");
-					response.send("added label "+newLabel+" to "+imageFile);
+					response.send("removed label "+newLabel+" from "+imageFile);
 				}
 	    }
 		}
