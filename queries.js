@@ -106,11 +106,11 @@ function answer(query, response) {
 					} else {
 						// good response...so let's update labels
 						console.log(arrayLabel);
-						arrayLabel.splice(indexLabel, 1);
 						var arrLength = arrayLabel.length;
 						if (arrLength == 1) {
 							arrLength = 0;
 						}
+						arrayLabel.splice(indexLabel, 1);
 						console.log(indexLabel);
 						console.log(arrLength);
 						console.log(arrayLabel);
