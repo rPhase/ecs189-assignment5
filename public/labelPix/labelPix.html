@@ -1,0 +1,28 @@
+<!doctype HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>Another Three Pictures</title>
+<link rel="stylesheet" type="text/css" href="labelPix.css">
+</head>
+<body>
+
+<main>
+<p>Get stored image labels:</p>
+
+<div id="threePhotosContainer">
+   <div class="flexy" onclick="getLabels('hula')"> 
+	<img class="flickrPhoto" src="hula.jpg" /> </div>
+   <div class="flexy" onclick="getLabels('redwoods')"> 
+	<img class="flickrPhoto" src="redwoods.jpg" /> </div>
+   <div class="flexy" onclick="getLabels('eagle')"> 
+	<img class="flickrPhoto" src="eagle.jpg" /> </div>
+</div>
+<p id="labels"></p>
+</main>
+
+<script src="labelPix.js"></script>
+
+</body>
+</html>

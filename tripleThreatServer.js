@@ -45,7 +45,7 @@ app.post('/', function (request, response){
 
 });
 
-// You know what this is, right? 
+// You know what this is, right?
 app.listen(10298);
 
 // sends off an HTTP response with the given status code and message
@@ -53,18 +53,21 @@ function sendCode(code,response,message) {
     response.status(code);
     response.send(message);
 }
-    
-// Stuff for dummy query answering
-// We'll replace this with a real database someday! 
-function answer(query, response) {
-var labels = {hula:
-"Dance, Performing Arts, Sports, Entertainment, Quinceañera, Event, Hula, Folk Dance",
-	      eagle: "Bird, Beak, Bird Of Prey, Eagle, Vertebrate, Bald Eagle, Fauna, Accipitriformes, Wing",
-	      redwoods: "Habitat, Vegetation, Natural Environment, Woodland, Tree, Forest, Green, Ecosystem, Rainforest, Old Growth Forest"};
 
+
+
+labels = {hula:
+	"Dance, Performing Arts, Sports, Entertainment, Quinceañera, Event, Hula, Folk Dance",
+	eagle: "Bird, Beak, Bird Of Prey, Eagle, Vertebrate, Bald Eagle, Fauna, Accipitriformes, Wing",
+	redwoods: "Habitat, Vegetation, Natural Environment, Woodland, Tree, Forest, Green, Ecosystem, Rainforest, Old Growth Forest"};
+// Stuff for dummy query answering
+// We'll replace this with a real database someday!
+function answer(query, response) {
     console.log("answering");
     kvpair = query.split("=");
+		console.log(kvpair);
     labelStr = labels[kvpair[1]];
+		console.log(labelStr);
     if (labelStr) {
 	    response.status(200);
 	    response.type("text/json");
@@ -73,4 +76,3 @@ var labels = {hula:
 	    sendCode(400,response,"requested photo not found");
     }
 }
-
