@@ -45,6 +45,7 @@ function answer(query, response) {
 						var labelString;
 						if (data.labels == "") {
 							labelString = newLabel;
+							console.log(labelString);
 						} else {
 							labelString = labelString + ", " + newLabel;
 						}
