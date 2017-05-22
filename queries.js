@@ -25,11 +25,11 @@ function answer(query, response) {
 			// go to database!
 			db.get(
 				'SELECT labels FROM photoLabels WHERE fileName = ?',
-				[imageFile], getCallback);
+				[imageFile], getCallbackAdd);
 
 			// define callback inside queries so it knows about imageFile
 			// because closure!
-	    function getCallback(err,data) {
+	    function getCallbackAdd(err,data) {
 				console.log("getting labels from "+imageFile);
 				// console.log(data);
 				var arrayLabel = data.labels.split(", ");
@@ -54,14 +54,14 @@ function answer(query, response) {
 						db.run(
 							'UPDATE photoLabels SET labels = ? WHERE fileName = ?',
 							[labelString, imageFile],
-							updateCallback);
+							updateCallbackAdd);
 						}
 				}
 	    }
 
 			// Also define this inside queries so it knows about
 			// response object
-			function updateCallback(err) {
+			function updateCallbackAdd(err) {
 				console.log("updating labels for "+imageFile+"\n");
 				if (err) {
 					console.log(err+"\n");
@@ -85,11 +85,11 @@ function answer(query, response) {
 			// go to database!
 			db.get(
 				'SELECT labels FROM photoLabels WHERE fileName = ?',
-				[imageFile], getCallback);
+				[imageFile], getCallbackDel);
 
 			// define callback inside queries so it knows about imageFile
 			// because closure!
-	    function getCallback(err,data) {
+	    function getCallbackDel(err,data) {
 				console.log("getting labels from "+imageFile);
 				// console.log(data);
 				var arrayLabel = data.labels.split(", ");
@@ -117,14 +117,14 @@ function answer(query, response) {
 						db.run(
 							'UPDATE photoLabels SET labels = ? WHERE fileName = ?',
 							[labelString, imageFile],
-							updateCallback);
+							updateCallbackDel);
 						}
 				}
 	    }
 
 			// Also define this inside queries so it knows about
 			// response object
-			function updateCallback(err) {
+			function updateCallbackDel(err) {
 				console.log("updating labels for "+imageFile+"\n");
 				if (err) {
 					console.log(err+"\n");
