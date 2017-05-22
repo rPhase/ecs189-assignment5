@@ -25,14 +25,29 @@ function readUploadFile() {
 	oReq.send(formData);
 }
 
-function fadeImage() {
-  var image = document.getElementById('theImage');
-  var button = document.getElementById('fadeButton');
-  if (button.textContent == 'Fade') {
-		image.style.opacity = 0.5;
-		button.textContent = 'UnFade';
-  } else {
-		image.style.opacity = 1.0;
-		button.textContent = 'Fade';
-  }
+function changeLabel(op) {
+	var start = "http://138.68.25.50:10298/change?img=";
+	var imgName = "img1.jpg"
+	var label = document.getElementById('labelBox').value;
+	// remove leading and trailing whitespace and URL encode the label
+	label = label.replace(/\s+/g, ' ').trim();
+	label = encodeURIComponent(label);
+	if (label) {
+		var opString = "&op=" + op;
+		var url = start + imgName + "&label=" +label + opString;
+		console.log(url);
+	} else {
+		alert("Invalid Label.");
+		return;
+	}
+
+	function reqListener () {
+		var pgh = document.getElementById("status");
+		pgh.textContent = this.responseText;
+	}
+
+	var oReq = new XMLHttpRequest();
+	oReq.addEventListener("load", reqListener);
+	oReq.open("GET", url);
+	oReq.send();
 }

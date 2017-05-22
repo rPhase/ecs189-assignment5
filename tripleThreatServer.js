@@ -14,13 +14,14 @@ app.use(express.static('public')); // serve static files from public
 
 // Case 2: queries
 // An example query URL is "138.68.25.50:???/query?img=hula"
-app.get('/query', function (request, response){
-    console.log("query");
+app.get('/change', function (request, response){
+    console.log("change");
     query = request.url.split("?")[1]; // get query string
+		console.log(query);
     if (query) {
-	answer(query, response);
+			answer2(query, response);
     } else {
-	sendCode(400,response,'query not recognized');
+			sendCode(400,response,'query not recognized');
     }
 });
 
@@ -72,6 +73,21 @@ function answer(query, response) {
 	    response.status(200);
 	    response.type("text/json");
 	    response.send(labelStr);
+    } else {
+	    sendCode(400,response,"requested photo not found");
+    }
+}
+
+function answer2(query, response) {
+    console.log("answering");
+    // kvpair = query.split("=");
+		// console.log(kvpair);
+    // labelStr = labels[kvpair[1]];
+		// console.log(labelStr);
+    if (query) {
+	    response.status(200);
+	    response.type("text/json");
+	    response.send(query);
     } else {
 	    sendCode(400,response,"requested photo not found");
     }
