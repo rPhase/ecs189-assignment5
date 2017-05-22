@@ -105,11 +105,13 @@ function answer(query, response) {
 						console.log("error: ",err,"\n");
 					} else {
 						// good response...so let's update labels
+						console.log(arrayLabel);
 						arrayLabel = arrayLabel.splice(indexLabel, 1);
 						var arrLength = arrayLabel.length;
 						if (arrLength == 1) {
 							arrLength = 0;
 						}
+						console.log(indexLabel);
 						console.log(arrLength);
 						console.log(arrayLabel);
 						var labelString = "";
