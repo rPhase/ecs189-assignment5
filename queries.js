@@ -29,6 +29,8 @@ function answer(query, response) {
 			// because closure!
 	    function getCallback(err,data) {
 				console.log("getting labels from "+imageFile);
+				console.log(data);
+				
 				if (err) {
 					console.log("error: ",err,"\n");
 				} else {
