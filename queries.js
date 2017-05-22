@@ -14,8 +14,10 @@ var querystring = require('querystring'); // handy for parsing query strings
 function answer(query, response) {
 	// query looks like: op=add&img=[image filename]&label=[label to add]
 	queryObj = querystring.parse(query);
+	console.log(queryObj.op);
 //==============================================================================
   if (queryObj.op == "add") {
+		console.log("Adding");
 		var newLabel = queryObj.label;
 		var imageFile = queryObj.img;
 		if (newLabel && imageFile) {
@@ -75,6 +77,7 @@ function answer(query, response) {
 	}
 //==============================================================================
 	if (queryObj.op == "delete") {
+		console.log("deleting");
 		var newLabel = queryObj.label;
 		var imageFile = queryObj.img;
 		if (newLabel && imageFile) {
