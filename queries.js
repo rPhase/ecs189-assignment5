@@ -33,12 +33,13 @@ function answer(query, response) {
 				var arrayLabel = data.labels.split(", ");
 				if (arrayLabel.indexOf(newLabel)!=-1) {
 					console.log("duplicate tag\n");
-					// sendCode(400,response,"duplicate tag");
+					response.status(200);
+					response.type("text/plain");
+					response.send("label "+newLabel+" is a duplicate");
 				}
 				else {
 					if (err) {
 						console.log("error: ",err,"\n");
-						// sendCode(400,response,"unable to get tags");
 					} else {
 						// good response...so let's update labels
 						var labelString;
