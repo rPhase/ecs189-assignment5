@@ -105,11 +105,16 @@ function answer(query, response) {
 						console.log("error: ",err,"\n");
 					} else {
 						// good response...so let's update labels
+						var arrLength = arrayLabel.length;
+						if (arrLength == 1) {
+							arrLength = 0;
+						}
 						arrayLabel = arrayLabel.splice(indexLabel, 1);
+						console.log(arrayLabel);
 						var labelString = "";
-						for (i = 0; i < arrayLabel.length; i++) {
+						for (i = 0; i < arrLength; i++) {
 							labelString = labelString + arrayLabel[i];
-							if (i != arrayLabel.length-1) {
+							if (i != arrLength-1) {
 								labelString = labelString + ", ";
 							}
 						}
