@@ -27,7 +27,7 @@ function readUploadFile() {
 
 function changeLabel(op) {
 	var start = "http://138.68.25.50:10298/change?img=";
-	var imgName = "img1.jpg"
+	var imgName = "eagle.jpg"
 	var label = document.getElementById('labelBox').value;
 	// remove leading and trailing whitespace and URL encode the label
 	label = label.replace(/\s+/g, ' ').trim();
