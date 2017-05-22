@@ -29,16 +29,29 @@ function answer(query, response) {
 			// because closure!
 	    function getCallback(err,data) {
 				console.log("getting labels from "+imageFile);
-				console.log(data);
-				
-				if (err) {
-					console.log("error: ",err,"\n");
-				} else {
-					// good response...so let's update labels
-					db.run(
-						'UPDATE photoLabels SET labels = ? WHERE fileName = ?',
-						[data.labels+", "+newLabel, imageFile],
-						updateCallback);
+				// console.log(data);
+				var arrayLabel = data.labels.split(", ");
+				if (arrayLabel.includes(newLabel)) {
+					console.log("duplicate tag\n");
+					sendCode(400,response,"duplicate tag");
+				}
+				else {
+					if (err) {
+						console.log("error: ",err,"\n");
+						sendCode(400,response,"unable to get tags");
+					} else {
+						// good response...so let's update labels
+						var labelString;
+						if (data.labels == "") {
+							labelString = newLabel;
+						} else {
+							labelString = labelString + ", " + newLabel;
+						}
+						db.run(
+							'UPDATE photoLabels SET labels = ? WHERE fileName = ?',
+							[labelString, imageFile],
+							updateCallback);
+						}
 				}
 	    }
 
