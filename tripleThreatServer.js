@@ -28,22 +28,22 @@ app.get('/change', function (request, response){
 // Case 3: upload images
 // Responds to any POST request
 app.post('/', function (request, response){
-    var form = new formidable.IncomingForm();
-    form.parse(request); // figures out what files are in form
+	var form = new formidable.IncomingForm();
+	form.parse(request); // figures out what files are in form
 
-    // callback for when a file begins to be processed
-    form.on('fileBegin', function (name, file){
-	// put it in /public
-	file.path = __dirname + '/public/' + file.name;
-	console.log("uploading ",file.name,name);
-    });
+	// callback for when a file begins to be processed
+	form.on('fileBegin', function (name, file){
+		// put it in /public
+		file.path = __dirname + '/public/' + file.name;
+		console.log("uploading ",file.name,name);
+	});
 
-    // callback for when file is fully recieved
-    form.on('end', function (){
-	console.log('success');
-	sendCode(201,response,'recieved file');  // respond to browser
-    });
-
+	// callback for when file is fully recieved
+	form.on('end', function (){
+		console.log('success');
+		insertIntoDB(file.name);
+		sendCode(201,response,'recieved file');  // respond to browser
+	});
 });
 
 // You know what this is, right?
@@ -51,8 +51,8 @@ app.listen(10298);
 
 // sends off an HTTP response with the given status code and message
 function sendCode(code,response,message) {
-    response.status(code);
-    response.send(message);
+  response.status(code);
+  response.send(message);
 }
 
 
