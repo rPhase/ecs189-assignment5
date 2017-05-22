@@ -23,8 +23,6 @@ function dataCallback(err, tableData) {
 
 
 function insertIntoDB(fname) {
-	var cmd = 'INSERT OR REPLACE INTO photoLabels VALUES ("' + fname +'", "", 0)';
-	console.log(cmd);
 	db.run(
 		'INSERT OR REPLACE INTO photoLabels VALUES (?, "", 0)',
 		[fname],
