@@ -109,8 +109,10 @@ function answer(query, response) {
 						var arrLength = arrayLabel.length;
 						if (arrLength == 1) {
 							arrLength = 0;
+						} else {
+							arrayLabel.splice(indexLabel, 1);
+							arrLength = arrayLabel.length;
 						}
-						arrayLabel.splice(indexLabel, 1);
 						console.log(indexLabel);
 						console.log(arrLength);
 						console.log(arrayLabel);
