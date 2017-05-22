@@ -29,3 +29,5 @@ function insertIntoDB(fname) {
 // 'INSERT OR REPLACE INTO photoLabels VALUES ("hula.jpg", "", 0)',
 // errorCallback);
 }
+
+exports.insertIntoDB = insertIntoDB;

@@ -1,6 +1,7 @@
 /* This server, unlike our previous ones, uses the express framework */
 var express = require('express');
 var formidable = require('formidable');  // we upload images in forms
+var DBop = require("./DBop");
 // this is good for parsing forms and reading in the images
 
 // make a new express server object
