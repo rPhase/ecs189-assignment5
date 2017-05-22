@@ -104,7 +104,7 @@ function answer(query, response) {
 						// good response...so let's update labels
 						arrayLabel = arrayLabel.splice(indexLabel, 1);
 						var labelString;
-						for (int i = 0; i < arrayLabel.length; i++) {
+						for (i = 0; i < arrayLabel.length; i++) {
 							labelString = labelString + arrayLabel[i];
 							if (i != arrayLabel.length-1) {
 								labelString = labelString + ", ";
