@@ -38,14 +38,15 @@ app.post('/', function (request, response){
 		// put it in /public
 		file.path = __dirname + '/public/' + file.name;
 		console.log("uploading ",file.name,name);
+
+		// callback for when file is fully recieved
+		form.on('end', function (){
+			console.log('success');
+			DBop.insertIntoDB(file.name);
+			sendCode(201,response,'recieved file');  // respond to browser
+		});
 	});
 
-	// callback for when file is fully recieved
-	form.on('end', function (){
-		console.log('success');
-		DBop.insertIntoDB(file.name);
-		sendCode(201,response,'recieved file');  // respond to browser
-	});
 });
 
 // You know what this is, right?
