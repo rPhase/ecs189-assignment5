@@ -106,7 +106,7 @@ function answer(query, response) {
 					} else {
 						// good response...so let's update labels
 						console.log(arrayLabel);
-						arrayLabel = arrayLabel.splice(indexLabel, 1);
+						arrayLabel.splice(indexLabel, 1);
 						var arrLength = arrayLabel.length;
 						if (arrLength == 1) {
 							arrLength = 0;
