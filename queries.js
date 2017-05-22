@@ -31,7 +31,7 @@ function answer(query, response) {
 				console.log("getting labels from "+imageFile);
 				// console.log(data);
 				var arrayLabel = data.labels.split(", ");
-				if (arrayLabel.includes(newLabel)) {
+				if (arrayLabel.contains(newLabel)) {
 					console.log("duplicate tag\n");
 					sendCode(400,response,"duplicate tag");
 				}
