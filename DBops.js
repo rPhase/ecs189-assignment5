@@ -50,9 +50,9 @@ console.log("starting DB operations");
 
 
 /* Some more examples of database commands you could try
-
+*/
     // Dump whole database
-    // db.all('SELECT * FROM photoLabels',dataCallback);
+    db.all('SELECT * FROM photoLabels',dataCallback);
 
     // fill-in-the-blanks syntax for Update command
     db.run(
@@ -68,7 +68,7 @@ console.log("starting DB operations");
     db.all(
 	'SELECT * FROM photoLabels WHERE labels LIKE  ?',
 	["%Bird%"],dataCallback);
-*/
+/**/
 
     db.close();
 
