@@ -12,7 +12,8 @@ function readUploadFile() {
 	image.style.opacity = 0.5;
 
 	// Upload the file
-	var url = "http://138.68.25.50:10298";
+	// var url = "http://138.68.25.50:10298";
+	var url = "http://localhost:10298";
 	var formData = new FormData();
 	// stick the file into the form
 	formData.append("userfile", selectedFile);
@@ -26,7 +27,8 @@ function readUploadFile() {
 }
 
 function changeLabel(op) {
-	var start = "http://138.68.25.50:10298/change?img=";
+	// var start = "http://138.68.25.50:10298/change?img=";
+	var start = "http://localhost:10298/change?img=";
 	var imgName = "eagle.jpg"
 	var label = document.getElementById('labelBox').value;
 	// remove leading and trailing whitespace and URL encode the label
@@ -53,7 +55,8 @@ function changeLabel(op) {
 }
 
 function getDB() {
-	var url = "http://138.68.25.50:10298/query?op=dump";
+	// var url = "http://138.68.25.50:10298/query?op=dump";
+	var url = "http://localhost:10298/query?op=dump";
 
 	function processDB() {
 		var pgh = document.getElementById("status");
