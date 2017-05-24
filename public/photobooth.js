@@ -53,7 +53,7 @@ function changeLabel(op) {
 }
 
 function getDB() {
-	var url = "http://138.68.25.50:10298/query?=dump";
+	var url = "http://138.68.25.50:10298/query?op=dump";
 
 	function processDB() {
 		var pgh = document.getElementById("status");

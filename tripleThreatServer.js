@@ -27,6 +27,20 @@ app.get('/change', function (request, response){
     }
 });
 
+app.get('/query', function (request, response){
+    console.log("query");
+    query = request.url.split("?")[1]; // get query string
+		console.log(query);
+		var querystring = require('querystring');
+		var queryObj = querystring.parse(query);
+
+    if (queryObj.op == "dump") {
+			DBop.dumpDB(query, response);
+    } else {
+			sendCode(400,response,'query not recognized');
+    }
+});
+
 // Case 3: upload images
 // Responds to any POST request
 app.post('/', function (request, response){
