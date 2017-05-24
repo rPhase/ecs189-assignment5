@@ -3,7 +3,7 @@
 
 function checkLabel(label) {
 	// remove leading and trailing whitespace and URL encode the label
-	label = label.replace(/\s+/g, ' ').trim();
+	label = label.replace(/\s+/g, ' ').trim().toLowerCase();
 	label = encodeURIComponent(label);
 	if (label) {
 		return label;
