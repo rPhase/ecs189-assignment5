@@ -13,25 +13,25 @@ var querystring = require('querystring'); // Handy for parsing query strings
 
 // Answer queries
 function answer(query, response){
-  // query looks like: op=add&img=[image filename]&label=[label to add/delete]
-  queryObj = querystring.parse(query);
+	// query looks like: op=add&img=[image filename]&label=[label to add/delete]
+	queryObj = querystring.parse(query);
 
-  // Add new label
-  if(queryObj.op === "add"){
-    DBop.addNewLabel(queryObj, response);
-  }
+	// Add new label
+	if(queryObj.op === "add"){
+		DBop.addNewLabel(queryObj, response);
+	}
 	// Delete a label
-  else if(queryObj.op === "delete"){
-    DBop.deleteLabel(queryObj, response);
-  }
+	else if(queryObj.op === "delete"){
+		DBop.deleteLabel(queryObj, response);
+	}
 	// get labels
-  else if(queryObj.op === "getLabels"){
-    DBop.displayLabels(queryObj, response);
-  }
+	else if(queryObj.op === "getLabels"){
+		DBop.displayLabels(queryObj, response);
+	}
 	// dump
-  else if(queryObj.op === "dump"){
-    DBop.dumpDB(response);
-  }
+	else if(queryObj.op === "dump"){
+		DBop.dumpDB(response);
+	}
 }
 
 
