@@ -10,9 +10,9 @@ var db = new sqlite3.Database(dbFile);  // New object, old DB
 
 
 function errorCallback(err) {
-  if (err) {
-    console.log("error: ",err,"\n");
-  }
+	if (err) {
+		console.log("error: ",err,"\n");
+	}
 }
 
 // function dataCallback(err, tableData) {
@@ -25,28 +25,27 @@ function errorCallback(err) {
 
 // Add new file entry into the database
 function insertIntoDB(filename, response){
-  db.run(
-    'INSERT OR REPLACE INTO PhotoLabels VALUES (?, "", 0)',
-    [filename], errorCallback);
+	db.run(
+		'INSERT OR REPLACE INTO PhotoLabels VALUES (?, "", 0)',
+		[filename], errorCallback);
 }
 
 // Add new label to image
 function addNewLabel(queryObj, response){
-  var newLabel = queryObj.label;
-  var imageFile = queryObj.img;
-  if (newLabel && imageFile) {
-    // Go to the database and get labels from PhotoLabels table
-    db.get(
-      'SELECT labels FROM PhotoLabels WHERE fileName = ?',
-      [imageFile], getCallback);
+	var newLabel = queryObj.label;
+	var imageFile = queryObj.img;
+	if (newLabel && imageFile) {
+		// Go to the database and get labels from PhotoLabels table
+		db.get(
+			'SELECT labels FROM PhotoLabels WHERE fileName = ?',
+			[imageFile], getCallback);
 
-    // Define callback inside queries so it knows about imageFile
-    function getCallback(err, data) {
-      console.log("Getting labels from " + imageFile + " to update");
-      if (err) {
-        console.log("error: ", err , "\n");
-      }
-      else {
+		// Define callback inside queries so it knows about imageFile
+		function getCallback(err, data) {
+			console.log("Getting labels from " + imageFile + " to update");
+			if (err) {
+				console.log("error: ", err , "\n");
+			} else {
 				// Check for duplicate labels
 				var arrayLabel = data.labels.split(",");
 				if (arrayLabel.indexOf(newLabel)!=-1) {
@@ -60,121 +59,112 @@ function addNewLabel(queryObj, response){
 						[data.labels + "," + newLabel, imageFile],
 						updateCallback);
 				}
-      }
-    }
-
-    // Also define this inside queries so it knows about response object
-    function updateCallback(err) {
-      console.log("Updating/adding labels for " + imageFile + "\n");
-      if (err) {
-	      console.log("error: ", err , "\n");
-	      sendCode(400, response, "Requested photo not found");
-      }
-      else {
-        // // Done adding, send response to browser
-        response.status(200);
-        response.type("text/plain");
-        response.send("added label " + newLabel + " to " + imageFile);
-      }
-    }
-  }
+			}
+		}
+		// Also define this inside queries so it knows about response object
+		function updateCallback(err) {
+			console.log("Updating/adding labels for " + imageFile + "\n");
+			if (err) {
+				console.log("error: ", err , "\n");
+				sendCode(400, response, "Requested photo not found");
+			} else {
+				// Done adding, send response to browser
+				response.status(200);
+				response.type("text/plain");
+				response.send("added label " + newLabel + " to " + imageFile);
+			}
+		}
+	}
 }
 
 // Display labels
 function displayLabels(queryObj, response){
-  var imageFile = queryObj.img;
-  if (imageFile){
-    // Go to the database and get labels from PhotoLabels table
-    db.get(
-      'SELECT labels FROM PhotoLabels WHERE fileName = ?',
-      [imageFile], getCallback);
+	var imageFile = queryObj.img;
+	if (imageFile){
+		// Go to the database and get labels from PhotoLabels table
+		db.get(
+			'SELECT labels FROM PhotoLabels WHERE fileName = ?',
+			[imageFile], getCallback);
 
-    function getCallback(err, data){
-      console.log("Getting labels from " + imageFile + " to display");
-      if (err) {
-        console.log("error: ", err , "\n");
-      }
-      else {
-        console.log(data);
-        // Send response to browser
-        response.status(200);
-        response.type("json");
-        response.send(data);
-      }
-    }
-  }
+		function getCallback(err, data){
+			console.log("Getting labels from " + imageFile + " to display");
+			if (err) {
+				console.log("error: ", err , "\n");
+			} else {
+				console.log(data);
+				// Send response to browser
+				response.status(200);
+				response.type("json");
+				response.send(data);
+			}
+		}
+	}
 }
 
 // Delete label from image
 function deleteLabel(queryObj, response){
-  var deleteLabel = queryObj.label;
-  var imageFile = queryObj.img;
+	var deleteLabel = queryObj.label;
+	var imageFile = queryObj.img;
+	if (deleteLabel && imageFile) {
+		// Go to the database and get labels from PhotoLabels table
+		db.get(
+			'SELECT labels FROM PhotoLabels WHERE fileName = ?',
+			[imageFile], getCallback);
 
-  if (deleteLabel && imageFile) {
-    // Go to the database and get labels from PhotoLabels table
-    db.get(
-        'SELECT labels FROM PhotoLabels WHERE fileName = ?',
-        [imageFile], getCallback);
+		// Define callback inside queries so it knows about imageFile
+		function getCallback(err, data) {
+			console.log("Getting labels from " + imageFile + " to update");
+			if (err) {
+				console.log("error: ", err , "\n");
+			} else {
+				// Search for label
+				var labels = data.labels.split(",");
+				var updateLabels = "";
+				for(var i = 0; i < labels.length; i++){
+					if(labels[i] !== deleteLabel && labels[i] !== ""){
+						updateLabels += labels[i] + ",";
+					}
+				}
+				console.log("labels: " + data.labels);
+				console.log("updateLabels: " + updateLabels);
 
-    // Define callback inside queries so it knows about imageFile
-    function getCallback(err, data) {
-      console.log("Getting labels from " + imageFile + " to update");
-      if (err) {
-        console.log("error: ", err , "\n");
-      }
-      else {
-        // Search for label
-        var labels = data.labels.split(",");
-        var updateLabels = "";
-        for(var i = 0; i < labels.length; i++){
-          if(labels[i] !== deleteLabel && labels[i] !== ""){
-            updateLabels += labels[i] + ",";
-          }
-        }
-
-        console.log("labels: " + data.labels);
-        console.log("updateLabels: " + updateLabels);
-
-        db.run(
-          'UPDATE photoLabels SET labels = ? WHERE fileName = ?',
-          [updateLabels, imageFile],
-          updateCallback);
-      }
-    }
-
-    function updateCallback(err){
-      console.log("Updating/deleting labels for " + imageFile + "\n");
-      if (err) {
-        console.log("error: ", err , "\n");
-        sendCode(400, response, "Requested photo not found");
-      }
-      else {
-        // // Done deleting, send response to browser
-        response.status(200);
-        response.type("text/plain");
-        response.send("deleted label " + deleteLabel + " from " + imageFile);
-      }
-    }
-  }
+				db.run(
+					'UPDATE photoLabels SET labels = ? WHERE fileName = ?',
+					[updateLabels, imageFile], updateCallback);
+			}
+		}
+		function updateCallback(err){
+			console.log("Updating/deleting labels for " + imageFile + "\n");
+			if (err) {
+				console.log("error: ", err , "\n");
+				sendCode(400, response, "Requested photo not found");
+			} else {
+				// Done deleting, send response to browser
+				response.status(200);
+				response.type("text/plain");
+				response.send("deleted label " + deleteLabel + " from " + imageFile);
+			}
+		}
+	}
 }
 
 // Respond to browser by sending HTTP response with the given status code and message
 function sendCode(code, response, message) {
-  response.status(code);
-  response.send(message);
+	response.status(code);
+	response.send(message);
 }
 
 // Dump the database to client
 function dumpDB(response) {
 	db.all('SELECT * FROM photoLabels',dataCallback);
 	function dataCallback(err, tableData) {
-    if (err) {
+		if (err) {
 			console.log("error: ",err,"\n");
-    } else {
+		} else {
 			response.status(200);
 			response.type("text/json");
 			response.send(tableData);
-    }
+		}
 	}
 }
 
