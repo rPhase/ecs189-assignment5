@@ -35,7 +35,10 @@ function dumpDB(query, response) {
     if (err) {
 			console.log("error: ",err,"\n");
     } else {
-			console.log("got: ",tableData,"\n");
+			// console.log("got: ",tableData,"\n");
+			response.status(200);
+			response.type("text/json");
+			response.send(tableData);
     }
 	}
 }
