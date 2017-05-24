@@ -17,25 +17,24 @@ app.use(express.static('public')); // Serve static files from public dir
 // Case 2: Answering queries (ex: "138.68.25.50:???/query?img=hula")
 app.get("/query", function(request, response){
 	var query = request.url.split("?")[1];  // Get query string
-  if(query){
-    queries.answer(query, response);
-  } else {
-    sendCode(400, response, 'query not recognized');
-  }
+	if(query){
+		queries.answer(query, response);
+	} else {
+		sendCode(400, response, 'query not recognized');
+	}
 });
 
 // Case 3: Uploading images
 app.post("/", function(request, response){
-  // Check incoming form and figures out what files are inside
-  var form = new formidable.IncomingForm();
-  form.parse(request);
+	// Check incoming form and figures out what files are inside
+	var form = new formidable.IncomingForm();
+	form.parse(request);
 
-  // When a file begins to be processed
-  form.on("fileBegin", function(name, file){
-	  console.log("Uploading");
-	  // Add file to public directory and database
-	  file.path = __dirname + "/public/photo/" + file.name;
-
+	// When a file begins to be processed
+	form.on("fileBegin", function(name, file){
+		console.log("Uploading");
+		// Add file to public directory and database
+		file.path = __dirname + "/public/photo/" + file.name;
 		//Closure
 		// When a file is fully received
 		form.on('end', function (){
