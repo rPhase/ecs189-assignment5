@@ -8,18 +8,18 @@ var dbFile = "photos.db"
 var db = new sqlite3.Database(dbFile);  // new object, old DB
 
 function errorCallback(err) {
-    if (err) {
-	console.log("error: ",err,"\n");
-    }
+  if (err) {
+		console.log("error: ",err,"\n");
+  }
 }
 
-function dataCallback(err, tableData) {
-    if (err) {
-	console.log("error: ",err,"\n");
-    } else {
-	console.log("got: ",tableData,"\n");
-    }
-}
+// function dataCallback(err, tableData) {
+//   if (err) {
+// 		console.log("error: ",err,"\n");
+//   } else {
+// 		console.log("got: ",tableData,"\n");
+//   }
+// }
 
 
 function insertIntoDB(fname) {
@@ -29,4 +29,16 @@ function insertIntoDB(fname) {
 		errorCallback);
 }
 
+function dumpDB(query, response) {
+	db.all('SELECT * FROM photoLabels',dataCallback);
+	function dataCallback(err, tableData) {
+    if (err) {
+			console.log("error: ",err,"\n");
+    } else {
+			console.log("got: ",tableData,"\n");
+    }
+	}
+}
+
 exports.insertIntoDB = insertIntoDB;
+exports.dumpDB = dumpDB;
