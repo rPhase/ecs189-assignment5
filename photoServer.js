@@ -34,16 +34,17 @@ app.post("/", function(request, response){
   form.on("fileBegin", function(name, file){
 	  console.log("Uploading");
 	  // Add file to public directory and database
-	  file.path = __dirname + "/public/photo/" + file.name;  // Put file in public dir
-});
+	  file.path = __dirname + "/public/photo/" + file.name;
 
-  // When a file is fully received
-  form.on('end', function (){
-    console.log("Upload complete");
-    // console.log(response);
-		DBop.insertIntoDB(file.name, response);
-    sendCode(201, response, 'Received file');  // Respond to browser
-  });
+		//Closure
+		// When a file is fully received
+		form.on('end', function (){
+			console.log("Upload complete");
+			// console.log(response);
+			DBop.insertIntoDB(file.name, response);
+			sendCode(201, response, 'Received file');  // Respond to browser
+		});
+	});
 });
 
 // Use your own port!

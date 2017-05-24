@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Photobooth</title>
+    <link rel="stylesheet" href="./photobooth.css">
+</head>
+<body>
+
+    <h1>Photobooth.</h1>
+
+    <main>
+        <!--Photos-->
+        <div id="photosContainer">
+
+        </div>
+
+
+        <!--Sidebar-->
+        <div id="sidebar">
+            <!--Upload-->
+            <img src="./photobooth/uploadIcon-01.png">
+            <button>upload</button>
+            <div id="upload">
+                <!--<button id="chooseFileBtn">choose file</button>-->
+                <input type="file" id="fileSelector">
+                <button onclick="uploadFile()">upload</button>
+            </div>
+
+            <!--Filter-->
+            <img src="./photobooth/filterIcon-01.png">
+            <button>filter</button>
+            <div id="filter">
+                <input type="text">
+                <button>enter</button>
+                <button>clear filter</button>
+            </div>
+
+            <!--Favorites-->
+            <img src="./photobooth/favoritesIcon.png">
+            <button>favorites</button>
+        </div>
+    </main>
+
+
+
+    <script src="./photobooth.js"></script>
+</body>
+</html>

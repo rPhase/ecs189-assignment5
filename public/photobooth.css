@@ -1,0 +1,36 @@
+main {
+    display: flex;
+    justify-content: space-between;
+}
+
+/*photos*/
+
+#photosContainer {
+    padding: 0 50px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.photo {
+    width: 300px;
+    padding: 5px;
+}
+
+/*sidebar*/
+
+#sidebar {
+    width: 200px;
+
+    background-color: rgb(117, 67, 48);
+}
+
+#upload {
+    background-color: rgb(196, 173, 162);
+    padding: 15px;
+}
+
+#filter {
+    background-color: rgb(196, 173, 162);
+    padding: 15px;
+}
