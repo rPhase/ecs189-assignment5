@@ -1,4 +1,15 @@
+// Dump all files in the database onto the browser
+function dumpDB(){
+    // Send a request to dump 
+    var urlToDumpDB = "http://localhost:10298/query?op=dump";
+    var dumpReq = new XMLHttpRequest();
+    dumpReq.open("GET", urlToDumpDB);
 
+    dumpReq.onload = function(){
+        console.log(dumpReq.responseText);
+    }
+    dumpReq.send();
+}
 
 
 function checkLabel(label) {
