@@ -10,7 +10,45 @@ function dumpDB(){
     dumpReq.open("GET", urlToDumpDB);
 
     dumpReq.onload = function(){
-        console.log(dumpReq.responseText);
+        console.log(JSON.parse(dumpReq.responseText));
+        var DBphotos = JSON.parse(dumpReq.responseText);
+
+        // Very similar to uploadFile():
+        var photosContainer = document.getElementById("photosContainer");
+
+
+        for(var i = 0; i < DBphotos.length; i++){
+            console.log(DBphotos[i]);
+            
+            var photoBox = document.createElement("div");
+            var img = document.createElement("img");
+            var labels = document.createElement("ul");
+            var input = document.createElement("input");
+            var addBtn = document.createElement("button");
+
+            photoBox.appendChild(img);
+            photoBox.appendChild(labels);
+            photoBox.appendChild(input);
+            photoBox.appendChild(addBtn);
+            photosContainer.appendChild(photoBox);
+
+            // Image attributes
+            img.id = DBphotos[i].fileName + "Img";
+            img.className = "photo";
+            img.src = "./photo/" + DBphotos[i].fileName;
+
+            // Labels
+            labels.id = DBphotos[i].fileName + "Labels";
+
+            // Input
+            input.type = "text";
+            input.id = DBphotos[i].fileName + "Input";
+
+            // Add label button
+            addBtn.innerHTML = "add";
+
+            
+        }
     }
     dumpReq.send();
 }
@@ -142,3 +180,4 @@ function uploadFile(){
     };
 
 }
+
