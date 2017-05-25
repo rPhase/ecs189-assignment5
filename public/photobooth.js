@@ -1,4 +1,57 @@
+// var url = "http://138.68.25.50:10298";
+var url = "http://localhost:10298";
 
+
+// Dump all files in the database onto the browser
+function dumpDB(){
+    // Send a request to dump 
+    var urlToDumpDB = url + "/query?op=dump";
+    var dumpReq = new XMLHttpRequest();
+    dumpReq.open("GET", urlToDumpDB);
+
+    dumpReq.onload = function(){
+        console.log(JSON.parse(dumpReq.responseText));
+        var DBphotos = JSON.parse(dumpReq.responseText);
+
+        // Very similar to uploadFile():
+        var photosContainer = document.getElementById("photosContainer");
+
+
+        for(var i = 0; i < DBphotos.length; i++){
+            console.log(DBphotos[i]);
+            
+            var photoBox = document.createElement("div");
+            var img = document.createElement("img");
+            var labels = document.createElement("ul");
+            var input = document.createElement("input");
+            var addBtn = document.createElement("button");
+
+            photoBox.appendChild(img);
+            photoBox.appendChild(labels);
+            photoBox.appendChild(input);
+            photoBox.appendChild(addBtn);
+            photosContainer.appendChild(photoBox);
+
+            // Image attributes
+            img.id = DBphotos[i].fileName + "Img";
+            img.className = "photo";
+            img.src = "./photo/" + DBphotos[i].fileName;
+
+            // Labels
+            labels.id = DBphotos[i].fileName + "Labels";
+
+            // Input
+            input.type = "text";
+            input.id = DBphotos[i].fileName + "Input";
+
+            // Add label button
+            addBtn.innerHTML = "add";
+
+            
+        }
+    }
+    dumpReq.send();
+}
 
 
 function checkLabel(label) {
@@ -14,9 +67,6 @@ function checkLabel(label) {
 }
 
 function uploadFile(){
-    // var url = "http://138.68.25.50:10298";
-    var url = "http://localhost:10298";
-
     var selectedFile = document.getElementById("fileSelector").files[0];  // Take the first file
 
     // Create new form and put file inside
@@ -76,7 +126,7 @@ function uploadFile(){
 				if (label == undefined) {
 					return;
 				}
-        var urlToAdd = "http://localhost:10298/query?op=add&img=" + selectedFile.name + "&label=" + label;
+        var urlToAdd = url + "/query?op=add&img=" + selectedFile.name + "&label=" + label;
         var addReq = new XMLHttpRequest();
         addReq.open("GET", urlToAdd);
 
@@ -84,7 +134,7 @@ function uploadFile(){
             // When adding label is complete, send another request to get labels to display
             console.log(addReq.responseText);
 
-            var urlToDisplay = "http://localhost:10298/query?op=getLabels&img=" + selectedFile.name;
+            var urlToDisplay = url + "/query?op=getLabels&img=" + selectedFile.name;
             var displayReq = new XMLHttpRequest();
             displayReq.open("GET", urlToDisplay);
 
@@ -104,7 +154,7 @@ function uploadFile(){
                 // Delete label
                 li.onclick = function(){
                     // Send request to delete label
-                    var urlToDelete = "http://localhost:10298/query?op=delete&img=" + selectedFile.name + "&label=" + li.textContent;
+                    var urlToDelete = url + "/query?op=delete&img=" + selectedFile.name + "&label=" + li.textContent;
                     var delReq = new XMLHttpRequest();
                     delReq.open("GET", urlToDelete);
 
@@ -130,3 +180,4 @@ function uploadFile(){
     };
 
 }
+
