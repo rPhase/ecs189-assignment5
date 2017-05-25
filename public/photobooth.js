@@ -14,7 +14,7 @@ function checkLabel(label) {
     }
 }
 
-
+// TODO: dump labels along with the images from database
 // TODO: make another function to add functionality to the add button since dumpDB() and uploadFile() are very similar
 
 
@@ -32,10 +32,13 @@ function dumpDB(){
         // Very similar to uploadFile():
         var photosContainer = document.getElementById("photosContainer");
 
+        // For each image, display image
         for(var i = 0; i < DBphotos.length; i++){
             console.log(DBphotos[i]);
 
             var fileName = DBphotos[i].fileName;
+            var labelsObj = DBphotos[i].labels;
+            var labelsAry = labelsObj.split(",");  // Split labels by ,
             
             var photoBox = document.createElement("div");
             var img = document.createElement("img");
@@ -63,6 +66,43 @@ function dumpDB(){
 
             // Add label button
             addBtn.innerHTML = "add";
+
+            // For each label, display label
+            for(var j = 0; j < labelsAry.length; j++){
+                if(labelsAry[j] !== ""){
+                    // Append label to list of labels
+                    var li = document.createElement("li");
+                    var label = document.createTextNode(labelsAry[j]); 
+
+                    li.appendChild(label);  // Append text to li
+                    labels.appendChild(li);  // Append li to list of labels
+
+                    // Delete label
+                    li.onclick = function(){
+                        // Send request to delete label
+                        var urlToDelete = url + "/query?op=delete&img=" + fileName + "&label=" + li.textContent;
+                        var delReq = new XMLHttpRequest();
+                        delReq.open("GET", urlToDelete);
+
+                        delReq.onload = function(){
+                            // When deleting label is complete, send another request to get labels to display
+                            console.log(delReq.responseText);
+                            var urlToDisplay = url + "/query?op=getLabels&img=" + fileName;
+                            var displayReq = new XMLHttpRequest();
+                            displayReq.open("GET", urlToDisplay);
+                            displayReq.onload = function(){
+                                console.log(JSON.parse(displayReq.responseText));
+                                li.parentNode.removeChild(li);  // Remove li from list
+                            };
+                            displayReq.send();
+                        };
+
+                        delReq.send();
+                    };
+                }
+            }
+            
+
 
             // Adding labels
             addBtn.onclick = function(){
@@ -116,7 +156,7 @@ function dumpDB(){
                             };
 
                             delReq.send();
-                        }
+                        };
                     };
 
                     displayReq.send();
@@ -124,8 +164,8 @@ function dumpDB(){
 
                 addReq.send();
             };
-            
         }
+        
     }
     dumpReq.send();
 }
