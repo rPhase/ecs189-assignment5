@@ -14,13 +14,30 @@ function checkLabel(label) {
     }
 }
 
+function toggleSidebar(option) {
+  var acc = document.getElementById(option);
+  /* Toggle between hiding and showing the active panel */
+
+  if (acc.style.display === "block") {
+    acc.style.display = "none";
+  } else {
+    acc.style.display = "block";
+  }
+}
+
 // TODO: dump labels along with the images from database
 // TODO: make another function to add functionality to the add button since dumpDB() and uploadFile() are very similar
 
 
+function createPhotoBox() {
+	
+}
+
+
+
 // Dump all files in the database onto the browser
 function dumpDB(){
-    // Send a request to dump 
+    // Send a request to dump
     var urlToDumpDB = url + "/query?op=dump";
     var dumpReq = new XMLHttpRequest();
     dumpReq.open("GET", urlToDumpDB);
@@ -39,7 +56,7 @@ function dumpDB(){
             var fileName = DBphotos[i].fileName;
             var labelsObj = DBphotos[i].labels;
             var labelsAry = labelsObj.split(",");  // Split labels by ,
-            
+
             var photoBox = document.createElement("div");
             var img = document.createElement("img");
             var labels = document.createElement("ul");
@@ -72,7 +89,7 @@ function dumpDB(){
                 if(labelsAry[j] !== ""){
                     // Append label to list of labels
                     var li = document.createElement("li");
-                    var label = document.createTextNode(labelsAry[j]); 
+                    var label = document.createTextNode(labelsAry[j]);
 
                     li.appendChild(label);  // Append text to li
                     labels.appendChild(li);  // Append li to list of labels
@@ -101,7 +118,7 @@ function dumpDB(){
                     };
                 }
             }
-            
+
 
 
             // Adding labels
@@ -165,7 +182,7 @@ function dumpDB(){
                 addReq.send();
             };
         }
-        
+
     }
     dumpReq.send();
 }
@@ -285,4 +302,3 @@ function uploadFile(){
     };
 
 }
-

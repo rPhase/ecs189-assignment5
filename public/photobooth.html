@@ -1,50 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Photobooth</title>
-    <link rel="stylesheet" href="./photobooth.css">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width">
+	<title>Photobooth</title>
+	<link rel="stylesheet" type="text/css" href="reset.css">
+	<link rel="stylesheet" href="photobooth.css">
 </head>
+
 <body>
+<header>
+	<h1>Photobooth.</h1>
+</header>
 
-    <h1>Photobooth.</h1>
-    <button onclick="dumpDB()">enter</button>
+<main>
+  <!--Photos-->
+	<div id="photoMain">
+		<!-- <div class="photoBox"> -->
+  </div>
 
-    <main>
-        <!--Photos-->
-        <div id="photosContainer">
+  <!--Sidebar-->
+	<div id="sidebar">
+		<!--Upload-->
+    <div class="dropContainer">
+      <button class="drop" onclick="toggleSidebar('upload')">
+				<p>+</p>
+				upload
+			</button>
+    </div>
+		<!-- The upload form -->
+    <div id="upload">
+      <button class="brownBtn" id="chooseFileBtn">choose file...</button>
+      <p id="fileName">filename.jpg</p>
+      <button class="brownBtn" id="uploadBtn">upload</button>
+    </div>
 
-        </div>
-
-
-        <!--Sidebar-->
-        <div id="sidebar">
-            <!--Upload-->
-            <img src="./photobooth/uploadIcon-01.png">
-            <button>upload</button>
-            <div id="upload">
-                <!--<button id="chooseFileBtn">choose file</button>-->
-                <input type="file" id="fileSelector">
-                <button onclick="uploadFile()">upload</button>
-            </div>
-
-            <!--Filter-->
-            <img src="./photobooth/filterIcon-01.png">
-            <button>filter</button>
-            <div id="filter">
-                <input type="text">
-                <button>enter</button>
-                <button>clear filter</button>
-            </div>
-
-            <!--Favorites-->
-            <img src="./photobooth/favoritesIcon.png">
-            <button>favorites</button>
-        </div>
-    </main>
+    <!--Filter-->
+    <div class="dropContainer">
+      <button class="drop" onclick="toggleSidebar('filter')">
+				<img class='dropImg' alt="filterIcon" src="./photobooth/filterIcon-01.svg">
+				filter
+			</button>
+    </div>
 
 
+    <div id="filter">
+      <input type="text">
+      <br>
+      <button class="brownBtn" id="enterBtn">enter</button>
+      <button class="brownBtn" id="clearBtn">clear filter</button>
+    </div>
 
-    <script src="./photobooth.js"></script>
+    <!--Favorites-->
+    <div class="dropContainer">
+      <button class="drop">
+				<img class='dropImg' alt="favoritesIcon" src="./photobooth/favoritesIcon.svg">
+				favorites
+			</button>
+    </div>
+
+	</div>
+</main>
+
+<script src="photobooth.js"></script>
 </body>
 </html>

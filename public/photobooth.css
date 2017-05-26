@@ -1,36 +1,249 @@
-main {
-    display: flex;
-    justify-content: space-between;
+/* title */
+body {
+	font-family: "Goudy Oldstyle Std" ,"Times New Roman", serif;
+	/*font-weight: light;*/
+	min-height: 100vh;
+	/*background-color: grey;*/
 }
+
+header {
+	padding: 40px 100px 15px;
+	font-size: 50px;
+	font-weight: bold;
+	color: #885541;
+}
+
 
 /*photos*/
 
-#photosContainer {
-    padding: 0 50px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+main {
+	display: flex;
+	/*background-color: pink;*/
+	justify-content: space-between;
+	border-top: 1px solid black;
+	margin-left: 30px;
+	/*flex-grow: 1;*/
+	/*background-color: red;*/
+}
+
+img {
+	max-width: 266px;
+	max-height: 400px;
+}
+
+
+#photoMain {
+	/* top, right, bottom, left */
+	padding: 40px 0px 0px 40px;
+	display: flex;
+	flex-wrap: wrap;
+	/*justify-content: space-between;*/
+	flex-grow: 1;
+	/*background-color: pink;*/
+}
+
+.photoBox{
+	width: 266px; /* HARD CODE */
+	margin: 5px;
+	overflow: hidden;
+}
+
+.photoBoxOptions {
+	display: block;
+	max-height: 400px;
+	max-width: 300px;
+
+	/*border-style: solid;*/
+	/*border-width: 2px;*/
 }
 
 .photo {
-    width: 300px;
-    padding: 5px;
+	/*padding: 5px;*/
+	/*display: block;*/
 }
+
+
+
+.closedOptions{
+	display: inline-block;
+
+	/* HARD CODE */
+	position: relative;
+	bottom: 60px;
+	left: 210px;
+}
+
+.openOptions {
+	display: none;
+
+	width: 150px;
+	border: 2px solid #5c3328;
+	background-color: #885541;
+
+	/* HARD CODE */
+	position: relative;
+	bottom: 122px;
+	left: 113px;
+}
+
+button.buttonOptions{
+	background-color: transparent;
+	color: #ffffff;
+	border-color: transparent;
+	border-bottom: #5c3328;
+	border-style: solid;
+	/*font-weight: 600;*/
+	font-size: 16px;
+	padding-bottom: 5px;
+	width: 100%;
+	text-align: left;
+}
+
+.burger{
+	float: right;
+}
+
+.tagOptions {
+	display: flex;
+	flex-direction: column;
+	/*background-color: skyblue;*/
+	margin-top: 10px;
+	/*border: 1px solid orange;*/
+}
+
+.labelTextBox {
+	font-family: inherit;
+	font-size: 18px;
+	/*background-color: red;*/
+	border: 2px solid #502f1f;
+	border-top: 0px;
+}
+
+.tagContainer {
+	display: flex;
+	flex-wrap: wrap;
+	border: 2px solid #502f1f;
+	padding: 4px;
+	/*border-bottom: 0px;*/
+}
+
+.tags {
+	display: flex;
+	align-items: center;
+	/*margin-right: 5px;*/
+	margin: 4px 4px;
+}
+
+img.delIcon {
+	width: 15px;
+	float: left;
+	clear: both;
+	margin-right: 3px;
+	/*opacity: 0;*/
+}
+
+p.tag {
+	overflow: auto;
+	display: block;
+	font-size: 16px;
+	line-height: normal;
+}
+
+
 
 /*sidebar*/
 
 #sidebar {
-    width: 200px;
-
-    background-color: rgb(117, 67, 48);
+	width: 250px;
+	background-color: #885541;
 }
 
 #upload {
-    background-color: rgb(196, 173, 162);
-    padding: 15px;
+	display: none;
+	background-color: rgb(196, 173, 162);
+	padding: 15px;
+	color: #885541;
+}
+
+#fileName {
+	font-weight: 600;
+	font-size: 18px;
+	padding: 10px;
 }
 
 #filter {
-    background-color: rgb(196, 173, 162);
-    padding: 15px;
+	display: none;
+	background-color: rgb(196, 173, 162);
+	padding: 15px;
+}
+
+button {
+	font-family: inherit;
+}
+
+button.drop {
+	display: flex;
+	align-items: center;
+	background-color: transparent;
+	color: #ffffff;
+	font-weight: 600;
+	font-size: 25px;
+	border: none;
+}
+
+/* plus button */
+div.dropContainer p {
+	font-size: 30px;
+	height: 50px;
+	width: 50px;
+	padding-right: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
+}
+
+img.dropImg {
+	height: 50px;
+	width: 50px;
+	padding-right: 10px;
+}
+
+button.brownBtn {
+	background-color: #885541;
+	color: #ffffff;
+	font-weight: 600;
+	border-color: #5c3328;
+	border-width: 2px;
+	border-style: solid;
+	margin-top: 10px;
+	margin-bottom: 5px;
+	padding: 5px;
+	font-size: 18px;
+}
+
+.addButton{
+	background-color: #885641;
+	color: #ffffff;
+	font-weight: 600;
+	border-color: #502f1f;
+	border-width: 2px;
+	border-style: solid;
+	padding: 5px 8px;
+	margin-top: 5px;
+}
+
+.brownBtn3{
+	background-color: #885541;
+	color: #ffffff;
+	font-weight: 600;
+	border-color: #5c3328;
+	border-width: 2px;
+	border-style: solid;
+	margin-top: 10px;
+	margin-bottom: 5px;
+	padding: 5px 10px;
+}
+
+#enterBtn {
+	margin-right: 15px;
 }
