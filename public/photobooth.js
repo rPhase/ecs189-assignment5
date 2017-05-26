@@ -1,6 +1,6 @@
 // var url = "http://138.68.25.50:10298";
 var url = "http://localhost:10298";
-
+dumpDB2();
 
 function checkLabel(label) {
     // remove leading and trailing whitespace and URL encode the label
@@ -28,11 +28,105 @@ function toggleSidebar(option) {
 // TODO: dump labels along with the images from database
 // TODO: make another function to add functionality to the add button since dumpDB() and uploadFile() are very similar
 
+// Create a photoBox container
+function createPhotoBox(fname, id) {
+	var photoBox = document.createElement("div");
+	photoBox.className = "photoBox";
+	photoBox.id = "photoBox " + id;
 
-function createPhotoBox() {
-	
+	// contains the image and the hamburger buttons
+	var photoBoxOptions = document.createElement("div");
+	photoBoxOptions.className = "photoBoxOptions"
+	photoBox.appendChild(photoBoxOptions);
+
+	// The actual image and its attributes
+	var photo = document.createElement("img");
+	photo.className = "photo";
+	photo.src = "./photo/" + fname;
+	photoBoxOptions.appendChild(photo);
+
+	// appened the menus
+	appendClosedHam(photoBoxOptions, id);
+	appendOpenHam(photoBoxOptions, id);
+
+	return photoBox;
+}
+// append the hamburger menu that go over the image
+function appendClosedHam(photoBoxOptions, id) {
+	var closedOptions = document.createElement("div");
+	closedOptions.className = "closedOptions";
+	closedOptions.id = "closedOptions-" + id;
+	var input = document.createElement("input");
+	input.type = "image";
+	input.onclick = function () {toggleHamOn(id);};
+	input.className = "hamburger";
+	input.src = "./photobooth/optionsTriangle.png";
+	closedOptions.appendChild(input);
+	photoBoxOptions.appendChild(closedOptions);
 }
 
+
+function toggleHamOn(id) {
+	var open = document.getElementById('openOptions-' + id);
+	var closed = document.getElementById('closedOptions-' + id);
+	closed.style.display = 'none';
+	open.style.display = 'inline-block';
+}
+
+function toggleHamOff(id) {
+	var open = document.getElementById('openOptions-' + id);
+	var closed = document.getElementById('closedOptions-' + id);
+	open.style.display = 'none';
+	closed.style.display = 'inline-block';
+}
+
+function appendOpenHam(photoBoxOptions, id) {
+	var openOptions = document.createElement("div");
+	openOptions.className = "openOptions";
+	openOptions.id = "openOptions-" + id;
+	var buttonTag = document.createElement("button");
+	buttonTag.onclick = "";
+	buttonTag.className = "buttonOptions";
+	buttonTag.innerText = "change tags";
+
+	var buttonFav = document.createElement("button");
+	buttonFav.onclick = "";
+	buttonFav.className = "buttonOptions";
+	buttonFav.innerText = "add to favorites";
+
+	var burger = document.createElement("div");
+	burger.className = "burger";
+
+	var input = document.createElement("input");
+	input.type = "image";
+	input.onclick = function () {toggleHamOff(id);};
+	input.className = "hamburger";
+	input.src = "./photobooth/optionsTriangle.png";
+
+	openOptions.appendChild(buttonTag);
+	openOptions.appendChild(buttonFav);
+	burger.appendChild(input);
+	openOptions.appendChild(burger);
+	photoBoxOptions.appendChild(openOptions);
+}
+
+
+function dumpDB2(){
+	// Send a request to dump
+	var urlToDumpDB = url + "/query?op=dump";
+	var oReq = new XMLHttpRequest();
+	oReq.open("GET", urlToDumpDB);
+	oReq.onload = function() {
+		console.log("try processing");
+		var DBphotos = JSON.parse(oReq.responseText);
+		var photoMain = document.getElementById("photoMain");
+		for (i = 0; i < DBphotos.length; i++) {
+			console.log(DBphotos[i]);
+			photoMain.appendChild(createPhotoBox(DBphotos[i].fileName, i));
+		}
+	}
+	oReq.send();
+}
 
 
 // Dump all files in the database onto the browser
