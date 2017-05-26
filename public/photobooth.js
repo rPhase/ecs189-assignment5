@@ -1,5 +1,6 @@
 // var url = "http://138.68.25.50:10298";
 var url = "http://localhost:10298";
+var numPhoto;
 dumpDB2();
 
 function checkLabel(label) {
@@ -244,6 +245,7 @@ function dumpDB2(){
 	oReq.onload = function() {
 		console.log("try processing");
 		var DBphotos = JSON.parse(oReq.responseText);
+		numPhoto = DBphotos.length;
 		var photoMain = document.getElementById("photoMain");
 		for (i = 0; i < DBphotos.length; i++) {
 			console.log(DBphotos[i]);
@@ -252,6 +254,50 @@ function dumpDB2(){
 	}
 	oReq.send();
 }
+
+
+
+function readUploadFile() {
+	// Read the file and display it first
+	var selectedFile = document.getElementById('fileSelector').files[0];
+	console.log(selectedFile.name);
+  // var image = document.getElementById('theImage');
+  var fr = new FileReader();
+  // anonymous callback uses file as image source
+  fr.onload = function () {
+		// image.src = fr.result;
+		var imgObj = {
+			fileName: selectedFile.name,
+			labels: ""
+		}
+		numPhoto = numPhoto + 1;
+		var photoMain = document.getElementById("photoMain");
+		photoMain.appendChild(createPhotoBox(imgObj, numPhoto));
+
+  };
+  fr.readAsDataURL(selectedFile);    // begin reading
+	// image.style.opacity = 0.5;
+
+	// Upload the file
+	// var url = "http://138.68.25.50:10298";
+	var formData = new FormData();
+	// stick the file into the form
+	formData.append("userfile", selectedFile);
+	var oReq = new XMLHttpRequest();
+	oReq.open("POST", url, true);
+	oReq.onload = function() {
+		// var imgObj = {
+		// 	fileName: selectedFile.name,
+		// 	labels: ""
+		// }
+		// numPhoto = numPhoto + 1;
+		// var photoMain = document.getElementById("photoMain");
+		// photoMain.appendChild(createPhotoBox(imgObj, numPhoto));
+	}
+	oReq.send(formData);
+}
+
+
 
 
 // Dump all files in the database onto the browser
