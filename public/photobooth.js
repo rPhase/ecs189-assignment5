@@ -29,7 +29,9 @@ function toggleSidebar(option) {
 // TODO: make another function to add functionality to the add button since dumpDB() and uploadFile() are very similar
 
 // Create a photoBox container
-function createPhotoBox(fname, id) {
+function createPhotoBox(entry, id) {
+	fname = entry.fileName;
+	labels = entry.labels;
 	var photoBox = document.createElement("div");
 	photoBox.className = "photoBox";
 	photoBox.id = "photoBox " + id;
@@ -49,8 +51,72 @@ function createPhotoBox(fname, id) {
 	appendClosedHam(photoBoxOptions, id);
 	appendOpenHam(photoBoxOptions, id);
 
+	// contains the tag box and other tag functions
+	var tagOptions = document.createElement("div");
+	tagOptions.className = "tagOptions";
+	photoBox.appendChild(tagOptions);
+	tagContainer(tagOptions, labels);
+	appendLabelTextBox(tagOptions);
+	appendAddButton(tagOptions);
 	return photoBox;
 }
+
+function appendLabelTextBox(tagOptions) {
+	var textBox = document.createElement("input");
+	textBox.className = "labelTextBox";
+	textBox.type = "text";
+	tagOptions.appendChild(textBox);
+}
+
+function appendAddButton(tagOptions) {
+	var someDiv = document.createElement("div");
+	var buttonAdd = document.createElement("button");
+	buttonAdd.onclick = "";
+	buttonAdd.className = "addButton";
+	buttonAdd.innerText = "Add";
+	someDiv.appendChild(buttonAdd);
+	tagOptions.appendChild(someDiv);
+}
+
+function tagContainer(tagOptions, labels){
+  var labelsArr = labels.split(", ");
+  var container = document.createElement("div");
+
+  tagOptions.appendChild(container);
+
+  container.className = "tagContainer";
+
+  // For each label
+  for(var i = 0; i < labelsArr.length; i++){
+    var tag = labelsArr[i];
+		console.log(tag);
+
+    container.appendChild(newTag(tag));
+  }
+}
+
+function newTag(tag) {
+	var div = document.createElement("div");  // tags
+	div.className = "tags";
+
+	var img = document.createElement("img");  // delIcon
+	img.className = "delIcon";
+	img.src = "./photobooth/removeTagButton.png";
+
+	var p = document.createElement("p");  // tag
+	p.className = "tag";
+	p.innerText = tag;
+
+
+	img.onclick = function() {alert("Pressed X for " + tag);}
+
+	div.appendChild(img);
+	div.appendChild(p);
+
+	return div;
+}
+
+
 // append the hamburger menu that go over the image
 function appendClosedHam(photoBoxOptions, id) {
 	var closedOptions = document.createElement("div");
@@ -65,14 +131,14 @@ function appendClosedHam(photoBoxOptions, id) {
 	photoBoxOptions.appendChild(closedOptions);
 }
 
-
+// Toggle the full hamburger menu on
 function toggleHamOn(id) {
 	var open = document.getElementById('openOptions-' + id);
 	var closed = document.getElementById('closedOptions-' + id);
 	closed.style.display = 'none';
 	open.style.display = 'inline-block';
 }
-
+// Toggle the full hamburger menu off
 function toggleHamOff(id) {
 	var open = document.getElementById('openOptions-' + id);
 	var closed = document.getElementById('closedOptions-' + id);
@@ -80,6 +146,7 @@ function toggleHamOff(id) {
 	closed.style.display = 'inline-block';
 }
 
+// append the full hamburger menu
 function appendOpenHam(photoBoxOptions, id) {
 	var openOptions = document.createElement("div");
 	openOptions.className = "openOptions";
@@ -110,7 +177,6 @@ function appendOpenHam(photoBoxOptions, id) {
 	photoBoxOptions.appendChild(openOptions);
 }
 
-
 function dumpDB2(){
 	// Send a request to dump
 	var urlToDumpDB = url + "/query?op=dump";
@@ -122,7 +188,7 @@ function dumpDB2(){
 		var photoMain = document.getElementById("photoMain");
 		for (i = 0; i < DBphotos.length; i++) {
 			console.log(DBphotos[i]);
-			photoMain.appendChild(createPhotoBox(DBphotos[i].fileName, i));
+			photoMain.appendChild(createPhotoBox(DBphotos[i], i));
 		}
 	}
 	oReq.send();

@@ -118,11 +118,11 @@ function deleteLabel(queryObj, response){
 				console.log("error: ", err , "\n");
 			} else {
 				// Search for label
-				var labels = data.labels.split(",");
+				var labels = data.labels.split(", ");
 				var updateLabels = "";
 				for(var i = 0; i < labels.length; i++){
 					if(labels[i] !== deleteLabel && labels[i] !== ""){
-						updateLabels += labels[i] + ",";
+						updateLabels += labels[i] + ", ";
 					}
 				}
 				console.log("labels: " + data.labels);
