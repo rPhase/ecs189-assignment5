@@ -47,16 +47,22 @@ function addNewLabel(queryObj, response){
 				console.log("error: ", err , "\n");
 			} else {
 				// Check for duplicate labels
-				var arrayLabel = data.labels.split(",");
+				var arrayLabel = data.labels.split(", ");
 				if (arrayLabel.indexOf(newLabel)!=-1) {
 					console.log("duplicate label\n");
 					// TODO
 					// Maybe respond later so the user knows about duplicate tags
 				} else {
+					var labelString;
+					if (data.labels == "") {
+						labelString = newLabel;
+					} else {
+						labelString = data.labels + ", " + newLabel;
+					}
 					// Add a label by updating labels
 					db.run(
 						'UPDATE photoLabels SET labels = ? WHERE fileName = ?',
-						[data.labels + "," + newLabel, imageFile],
+						[labelString, imageFile],
 						updateCallback);
 				}
 			}

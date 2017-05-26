@@ -55,67 +55,126 @@ function createPhotoBox(entry, id) {
 	var tagOptions = document.createElement("div");
 	tagOptions.className = "tagOptions";
 	photoBox.appendChild(tagOptions);
-	tagContainer(tagOptions, labels);
-	appendLabelTextBox(tagOptions);
-	appendAddButton(tagOptions);
+	tagContainer(tagOptions, labels, fname, id);
+	appendLabelTextBox(tagOptions, id);
+	appendAddButton(tagOptions, fname, id);
 	return photoBox;
 }
 
-function appendLabelTextBox(tagOptions) {
+function appendLabelTextBox(tagOptions, id) {
 	var textBox = document.createElement("input");
 	textBox.className = "labelTextBox";
+	textBox.id = "labelTextBox-"+id;
 	textBox.type = "text";
 	tagOptions.appendChild(textBox);
 }
 
-function appendAddButton(tagOptions) {
+function appendAddButton(tagOptions, fname, id) {
 	var someDiv = document.createElement("div");
 	var buttonAdd = document.createElement("button");
-	buttonAdd.onclick = "";
+	buttonAdd.onclick = function() {addLabelDB(fname, id);}
 	buttonAdd.className = "addButton";
 	buttonAdd.innerText = "Add";
 	someDiv.appendChild(buttonAdd);
 	tagOptions.appendChild(someDiv);
 }
 
-function tagContainer(tagOptions, labels){
+function tagContainer(tagOptions, labels, fname, id){
   var labelsArr = labels.split(", ");
   var container = document.createElement("div");
 
   tagOptions.appendChild(container);
 
   container.className = "tagContainer";
+	container.id = "tagContainer-"+id;
 
   // For each label
+	console.log("length:"+labelsArr.length);
   for(var i = 0; i < labelsArr.length; i++){
     var tag = labelsArr[i];
 		console.log(tag);
-
-    container.appendChild(newTag(tag));
+		if (tag!=""){
+			container.appendChild(newTag(tag, fname));
+		}
   }
 }
 
-function newTag(tag) {
+function newTag(tag, fname) {
 	var div = document.createElement("div");  // tags
 	div.className = "tags";
 
 	var img = document.createElement("img");  // delIcon
 	img.className = "delIcon";
 	img.src = "./photobooth/removeTagButton.png";
+	div.appendChild(img);
 
 	var p = document.createElement("p");  // tag
 	p.className = "tag";
 	p.innerText = tag;
-
-
-	img.onclick = function() {alert("Pressed X for " + tag);}
-
-	div.appendChild(img);
 	div.appendChild(p);
+
+	img.onclick = function() {deleteLabelDB(fname, tag, div);}
 
 	return div;
 }
 
+function deleteLabel(tag){
+
+}
+
+function deleteLabelDB(imgName, label, div) {
+	var start = "/query?img=";
+	// remove leading and trailing whitespace and URL encode the label
+	label = label.replace(/\s+/g, ' ').trim();
+	label = encodeURIComponent(label);
+	if (label) {
+		var opString = "&op=delete";
+		var new_url = url + start + imgName + "&label=" +label + opString;
+		console.log(new_url);
+	} else {
+		alert("Invalid Label.");
+		return;
+	}
+
+	function reqListener () {
+		// TODO check for proper deletion from db
+		alert(this.responseText);
+		div.parentNode.removeChild(div);
+	}
+
+	var oReq = new XMLHttpRequest();
+	oReq.addEventListener("load", reqListener);
+	oReq.open("GET", new_url);
+	oReq.send();
+}
+
+function addLabelDB(imgName, id) {
+	var start = "/query?img=";
+	var label = document.getElementById('labelTextBox-'+id).value;
+	// remove leading and trailing whitespace and URL encode the label
+	label = label.replace(/\s+/g, ' ').trim();
+	label = encodeURIComponent(label);
+	if (label) {
+		var opString = "&op=add";
+		var new_url = url + start + imgName + "&label=" +label + opString;
+		console.log(new_url);
+	} else {
+		alert("Invalid Label.");
+		return;
+	}
+
+	function reqListener () {
+		// TODO check for proper deletion from db
+		alert(this.responseText);
+		var container = document.getElementById("tagContainer-"+id);
+		container.appendChild(newTag(label, imgName));
+	}
+
+	var oReq = new XMLHttpRequest();
+	oReq.addEventListener("load", reqListener);
+	oReq.open("GET", new_url);
+	oReq.send();
+}
 
 // append the hamburger menu that go over the image
 function appendClosedHam(photoBoxOptions, id) {

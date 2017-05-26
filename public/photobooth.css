@@ -37,6 +37,8 @@ img {
 	padding: 40px 0px 0px 40px;
 	display: flex;
 	flex-wrap: wrap;
+	/*flex-direction: row-reverse;*/
+	/*align-items: flex-start;*/
 	/*justify-content: space-between;*/
 	flex-grow: 1;
 	/*background-color: pink;*/
@@ -208,7 +210,7 @@ img.dropImg {
 	padding-right: 10px;
 }
 
-button.brownBtn {
+.brownBtn {
 	background-color: #885541;
 	color: #ffffff;
 	font-weight: 600;
