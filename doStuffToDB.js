@@ -42,7 +42,7 @@ db.serialize( function () {
 	console.log("Update");
   // Changing data - the UPDATE statement
 	db.run(
-		'UPDATE photoLabels SET labels = "Dance, Performing Arts, Sports, Entertainment, Quinceañera, Event, Hula, Folk Dance" WHERE fileName = "hula.jpg" ', errorCallback);
+		'UPDATE photoLabels SET labels = "dance, performing arts, sports, entertainment, quinceañera, event, hula, folk dance" WHERE fileName = "hula.jpg" ', errorCallback);
 
 	console.log("Get Hula labels");
   db.get(
@@ -60,18 +60,18 @@ db.serialize( function () {
   // fill-in-the-blanks syntax for Update command
   db.run(
 		'UPDATE photoLabels SET labels = ? WHERE fileName = ? ',
-		['Bird, Beak, Bird Of Prey, Eagle, Vertebrate, Bald Eagle, Fauna, Accipitriformes, Wing', 'eagle.jpg'],errorCallback);
+		['bird, beak, bird of prey, eagle, vertebrate, bald eagle, fauna, accipitriformes, wing', 'eagle.jpg'],errorCallback);
 
   db.run(
 		'UPDATE photoLabels SET labels = ? WHERE fileName = ? ',
-		[ 'Habitat, Vegetation, Natural Environment, Woodland, Tree, Forest, Green, Ecosystem, Rainforest, Old Growth Forest', 'redwoods.jpg'],errorCallback);
+		[ 'habitat, vegetation, natural environment, woodland, tree, forest, green, ecosystem, rainforest, old growth forest', 'redwoods.jpg'],errorCallback);
 
 	console.log("Select labels with bird");
   // Getting all rows where a substring of the "labels" field
   // matches the string "Bird"
   db.all(
 		'SELECT * FROM photoLabels WHERE labels LIKE  ?',
-		["%Bird%"],dataCallback);
+		["%bird%"],dataCallback);
 /**/
 
   db.close();
