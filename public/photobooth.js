@@ -3,6 +3,37 @@ var url = "http://localhost:10298";
 var numPhoto;
 dumpDB2();
 
+
+function filterPhotos(){
+	var photoMain = document.getElementById("photoMain");
+	var photoBoxes = photoMain.getElementsByClassName("photoBox");
+	var input = document.getElementById("filterInput");
+	console.log("FILTER" + input.value);
+	
+	// For each photo box
+	for(var i = 0; i < photoBoxes.length; i++){
+		// Don't display any photo boxes yet
+		photoBoxes[i].style.display = "none";  
+
+		// Get all tags in each photo box
+		var tags = photoBoxes[i].getElementsByClassName("tag");
+		
+		// For each tag
+		for(var j = 0; j < tags.length; j++){
+			// Make it lowercase to filter easily
+			tags[j].innerHTML = tags[j].innerHTML.toLowerCase();
+			input.value = input.value.toLowerCase();
+
+			// If a tag matches the filter input, display photo box
+			if(tags[j].innerHTML === input.value){
+				photoBoxes[i].style.display = "inline";
+			}
+		}
+		
+	}
+}
+
+
 function checkLabel(label) {
     // remove leading and trailing whitespace and URL encode the label
     label = label.replace(/\s+/g, ' ').trim().toLowerCase();
@@ -25,9 +56,6 @@ function toggleSidebar(option) {
     acc.style.display = "block";
   }
 }
-
-// TODO: dump labels along with the images from database
-// TODO: make another function to add functionality to the add button since dumpDB() and uploadFile() are very similar
 
 // Create a photoBox container
 function createPhotoBox(entry, id) {
