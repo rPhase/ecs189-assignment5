@@ -13,7 +13,8 @@ function dumpDB2(){
 
 	// When response comes back, 
 	oReq.onload = function() {
-		console.log("try processing");
+		// console.log("try processing");
+
 		// Parse json response
 		var DBphotos = JSON.parse(oReq.responseText);
 		numPhoto = DBphotos.length;
@@ -21,7 +22,7 @@ function dumpDB2(){
 		// For each photo in the DB, create a new photo box and append to the main photo container
 		var photoMain = document.getElementById("photoMain");
 		for (i = 0; i < DBphotos.length; i++) {
-			console.log(DBphotos[i]);
+			// console.log(DBphotos[i]);
 			photoMain.appendChild(createPhotoBox(DBphotos[i], i));
 		}
 	}
@@ -33,27 +34,37 @@ function dumpDB2(){
 function readUploadFile() {
 	// Select the file
 	var selectedFile = document.getElementById('fileSelector').files[0];
-	console.log(selectedFile.name);
-  	// var image = document.getElementById('theImage');
+	// console.log(selectedFile.name);
+
+  	var imgObj = {};
+  	var photoMain = document.getElementById("photoMain");
+	var tempPhotoBox = document.createElement("div");
 
   	// Use FileReader to read the selected file
   	var fr = new FileReader();
-  	// anonymous callback uses file as image source
-  	fr.onload = function () {
-		// image.src = fr.result;
-		var imgObj = {
-			fileName: selectedFile.name,
-			labels: ""
-		}
-		numPhoto = numPhoto + 1;
 
-		// Create a new photo box and append to the main photo container
-		var photoMain = document.getElementById("photoMain");
-		photoMain.appendChild(createPhotoBox(imgObj, numPhoto));
+  	// When reading file is finished, display faded image and upload bar
+  	fr.onload = function () {
+		imgObj.fileName = selectedFile.name;
+		imgObj.labels = "";
+		
+		// Display faded imaged while it is uploading
+		var image = document.createElement("img");
+		image.src = fr.result;
+		image.className = "photo";
+		image.style.opacity = 0.5;
+		tempPhotoBox.className = "photoBox";
+
+		// Display upload bar
+
+
+		// Append
+		tempPhotoBox.appendChild(image);
+		photoMain.appendChild(tempPhotoBox);
+		
 
   	};
   	fr.readAsDataURL(selectedFile);  // Begin reading file
-	// image.style.opacity = 0.5;
 
 	// Use FormData to send file over to insert into database
 	var formData = new FormData();
@@ -63,15 +74,15 @@ function readUploadFile() {
 	var oReq = new XMLHttpRequest();
 	oReq.open("POST", url, true);
 
-	// When a response comes back,
+	// When a response comes back, delete faded image and create a photo box 
 	oReq.onload = function() {
-		// var imgObj = {
-		// 	fileName: selectedFile.name,
-		// 	labels: ""
-		// }
-		// numPhoto = numPhoto + 1;
-		// var photoMain = document.getElementById("photoMain");
-		// photoMain.appendChild(createPhotoBox(imgObj, numPhoto));
+		console.log(this.responseText);
+		// Delete faded image
+		// tempPhotoBox.parentNode.removeChild(tempPhotoBox);
+
+		// Create a new photo box and append to the main photo container
+		numPhoto = numPhoto + 1;
+		photoMain.appendChild(createPhotoBox(imgObj, numPhoto));
 	}
 	oReq.send(formData);  // Send request
 }
@@ -98,7 +109,7 @@ function createPhotoBox(entry, id) {
 	photo.src = "./photo/" + fname;
 	photoBoxOptions.appendChild(photo);
 
-	// Appened both open and closed options box (hamburger menu)
+	// Appened both open and closed options box (hamburger menus)
 	appendClosedHam(photoBoxOptions, id);
 	appendOpenHam(photoBoxOptions, id);
 
@@ -210,10 +221,10 @@ function tagContainer(tagOptions, labels, fname, id){
 	tagOptions.appendChild(container);
 
   	// For each tag
-	console.log("length:"+labelsArr.length);
+	// console.log("length:"+labelsArr.length);
   	for(var i = 0; i < labelsArr.length; i++){
     	var tag = labelsArr[i];
-		console.log(tag);
+		// console.log(tag);
 		// Create tag and append tag to tags div
 		if (tag!=""){
 			container.appendChild(newTag(tag, fname));
@@ -288,7 +299,7 @@ function addLabelDB(imgName, id) {
 		// URL to make a request to add tag
 		var opString = "&op=add";
 		var new_url = url + start + imgName + "&label=" +label + opString;
-		console.log(new_url);
+		// console.log(new_url);
 	} else {
 		alert("Invalid Label.");
 		return;
@@ -323,7 +334,7 @@ function deleteLabelDB(imgName, label, div) {
 		// URL to make a request to delete tag
 		var opString = "&op=delete";
 		var new_url = url + start + imgName + "&label=" +label + opString;
-		console.log(new_url);
+		// console.log(new_url);
 	} else {
 		alert("Invalid Label.");
 		return;

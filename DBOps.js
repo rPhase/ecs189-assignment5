@@ -9,11 +9,11 @@ var dbFile = "photos.db";
 var db = new sqlite3.Database(dbFile);  // New object, old DB
 
 
-function errorCallback(err) {
-	if (err) {
-		console.log("error: ",err,"\n");
-	}
-}
+// function errorCallback(err) {
+// 	if (err) {
+// 		console.log("error: ",err,"\n");
+// 	}
+// }
 
 // function dataCallback(err, tableData) {
 //     if (err) {
@@ -27,7 +27,15 @@ function errorCallback(err) {
 function insertIntoDB(filename, response){
 	db.run(
 		'INSERT OR REPLACE INTO PhotoLabels VALUES (?, "", 0)',
-		[filename], errorCallback);
+		[filename], runCallback);
+
+	function runCallback(err){
+		if (err) {
+			console.log("error: ", err , "\n");
+		} else {
+			console.log("upload complete");
+		}
+	}
 }
 
 // Add new label to image

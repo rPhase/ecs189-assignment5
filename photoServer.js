@@ -38,7 +38,6 @@ app.post("/", function(request, response){
 		//Closure
 		// When a file is fully received
 		form.on('end', function (){
-			console.log("Upload complete");
 			// console.log(response);
 			DBop.insertIntoDB(file.name, response);
 			sendCode(201, response, 'Received file');  // Respond to browser
