@@ -1,5 +1,7 @@
-// var url = "http://138.68.25.50:10298";
-var url = "http://localhost:10298";
+// var url = "http://138.68.25.50:10298";  // Ryan's
+// var url = "http://localhost:10298";
+var url = "http://138.68.25.50:12520";  // Lanh's
+
 var numPhoto;
 dumpDB2();
 
@@ -78,7 +80,7 @@ function readUploadFile() {
 	oReq.onload = function() {
 		console.log(this.responseText);
 		// Delete faded image
-		// tempPhotoBox.parentNode.removeChild(tempPhotoBox);
+		tempPhotoBox.parentNode.removeChild(tempPhotoBox);
 
 		// Create a new photo box and append to the main photo container
 		numPhoto = numPhoto + 1;
