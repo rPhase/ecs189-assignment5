@@ -42,7 +42,6 @@ app.post("/", function(browserRequest, browserResponse){
 
 		// Add file to public directory
 		file.path = __dirname + "/public/photo/" + file.name;
-		//Closure
 
 		// When a file is fully received, get tags from Google Cloud Vision API and add to database
 		form.on('end', function (){
@@ -80,6 +79,7 @@ app.post("/", function(browserRequest, browserResponse){
 		    	} else {
 					APIresponseJSON = body.responses[0].labelAnnotations;
 
+					// For each tag, concatenate into a string
 					for(var i = 0; i < APIresponseJSON.length; i++){
 						// console.log(APIresponseJSON[i].description);
 						tags += APIresponseJSON[i].description + ", ";  
@@ -87,6 +87,7 @@ app.post("/", function(browserRequest, browserResponse){
 					// Insert into the database
 					DBop.insertIntoDB(file.name, tags, browserResponse); 
 
+					// Send response back to browser
 					browserResponse.status(200);
 					browserResponse.type("json");
 					browserResponse.send(APIresponseJSON);
@@ -101,55 +102,6 @@ app.post("/", function(browserRequest, browserResponse){
 
 // Use your own port!
 app.listen(12520);
-
-
-// // Make a request to Google Cloud Vision API and get tags
-// function requestAPI(file){
-// 	// An object that gets stringified and sent to the API in the body of an HTTP request
-// 	var requestObject = 
-// 	{ 
-// 		"requests": [ {
-// 			"image": { "source": {"imageUri": url + "/photo/" + file.name} },
-// 			"features": [{ "type": "LABEL_DETECTION" }]
-// 		} ]
-// 	}
-
-// 	// URL containing the API key 
-// 	APIurl = 'https://vision.googleapis.com/v1/images:annotate?key=AIzaSyDmqfn4_ar6jhgKNbvno7mKCIUhD7fOkKk';
-
-// 	// Makes a request to the API, Uses the Node request module, which packs up and sends off an XMLHttpRequest. 
-// 	request(
-// 		// HTTP header stuff
-// 	    { 
-// 			url: APIurl,
-// 			method: "POST",
-// 			headers: {"content-type": "application/json"},
-// 			// stringifies object and puts into HTTP request body as JSON 
-// 			json: requestObject,
-// 	    },
-// 	    // callback function for API request
-// 	    APIcallback
-// 	);
-
-// 	// Get tags from API
-// 	function APIcallback(err, APIresponse, body) {
-//     	if ((err) || (APIresponse.statusCode != 200)) {
-// 			console.log("Got API error"); 
-//     	} else {
-// 			APILabels = body.responses[0].labelAnnotations;
-// 			for(var i = 0; i < APILabels.length; i++){
-// 				console.log(APILabels[i].description);
-// 			}
-// 			APIresponse.status(200);
-// 			APIresponse.type("text/plain")
-// 			APIresponse.send(APILabels);
-//     	}
-// 	}
-
-
-	
-// }
-
 
 
 
