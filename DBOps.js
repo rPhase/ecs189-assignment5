@@ -24,10 +24,10 @@ var db = new sqlite3.Database(dbFile);  // New object, old DB
 // }
 
 // Add new file entry into the database
-function insertIntoDB(filename, response){
+function insertIntoDB(filename, tags, response){
 	db.run(
-		'INSERT OR REPLACE INTO PhotoLabels VALUES (?, "", 0)',
-		[filename], runCallback);
+		'INSERT OR REPLACE INTO PhotoLabels VALUES (?, ?, 0)',
+		[filename, tags], runCallback);
 
 	function runCallback(err){
 		if (err) {

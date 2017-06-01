@@ -38,7 +38,7 @@ function readUploadFile() {
 	var selectedFile = document.getElementById('fileSelector').files[0];
 	// console.log(selectedFile.name);
 
-  	var imgObj = {};
+  	var imgObj = { filename: "", labels: "" };
   	var photoMain = document.getElementById("photoMain");
 	var tempPhotoBox = document.createElement("div");
 
@@ -48,7 +48,6 @@ function readUploadFile() {
   	// When reading file is finished, display faded image and upload bar
   	fr.onload = function () {
 		imgObj.fileName = selectedFile.name;
-		imgObj.labels = "";
 		
 		// Display faded imaged while it is uploading
 		var image = document.createElement("img");
@@ -76,9 +75,15 @@ function readUploadFile() {
 	var oReq = new XMLHttpRequest();
 	oReq.open("POST", url, true);
 
-	// When a response comes back, delete faded image and create a photo box 
+	// When a response comes back, delete faded image, create a photo box, add tags from API
 	oReq.onload = function() {
-		console.log(this.responseText);
+		// Parse API object (contains tags)
+		var APILabels = JSON.parse(this.responseText);
+		for(var i = 0; i < APILabels.length; i++){
+			imgObj.labels += APILabels[i].description + ", ";
+			// console.log(APILabels[i].description);
+		}
+
 		// Delete faded image
 		tempPhotoBox.parentNode.removeChild(tempPhotoBox);
 
@@ -303,14 +308,14 @@ function addLabelDB(imgName, id) {
 		var new_url = url + start + imgName + "&label=" +label + opString;
 		// console.log(new_url);
 	} else {
-		alert("Invalid Label.");
+		// alert("Invalid Label.");
 		return;
 	}
 
 	// Callback function when a response comes back
 	function reqListener () {
 		// TODO check for proper deletion from db
-		alert(this.responseText);
+		// alert(this.responseText);
 		// Create tag and append to tags div
 		var container = document.getElementById("tagContainer-"+id);
 		container.appendChild(newTag(label, imgName));
@@ -338,14 +343,14 @@ function deleteLabelDB(imgName, label, div) {
 		var new_url = url + start + imgName + "&label=" +label + opString;
 		// console.log(new_url);
 	} else {
-		alert("Invalid Label.");
+		// alert("Invalid Label.");
 		return;
 	}
 
 	// Callback function when a response comes back
 	function reqListener () {
 		// TODO check for proper deletion from db
-		alert(this.responseText);
+		// alert(this.responseText);
 		// Remove tag from tags div
 		div.parentNode.removeChild(div);
 	}
@@ -416,7 +421,7 @@ function checkLabel(label) {
     if (label) {
         return label;
     } else {
-        alert("Invalid Label.");
+        // alert("Invalid Label.");
         return undefined;
     }
 }
