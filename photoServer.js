@@ -1,6 +1,7 @@
+var port = 10298;
 // var url = "http://138.68.25.50:10298";  // Ryan's
-// var url = "http://localhost:10298";
-var url = "http://138.68.25.50:12520";  // Lanh's
+var url = "http://localhost:"+port;
+//var url = "http://138.68.25.50:12520";  // Lanh's
 
 // Require some outside javascript files
 var DBop = require("./DBOps");
@@ -30,6 +31,80 @@ app.get("/query", function(request, response){
 	}
 });
 
+
+var LIVE = false;
+// URL containing the API key
+var APIurl = 'https://vision.googleapis.com/v1/images:annotate?key=AIzaSyDmqfn4_ar6jhgKNbvno7mKCIUhD7fOkKk';
+
+function getGCV(fname, browserResponse) {
+	// An object that gets stringified and sent to the API in the body of an HTTP request
+	var requestObject = {
+		"requests": [ {
+			"image": { "source": {"imageUri": url + "/photo/" + fname} },
+			"features": [{ "type": "LABEL_DETECTION" }]
+		} ]
+	}
+	// Makes a request to the API, Uses the Node request module, which packs up and sends off an XMLHttpRequest.
+	request(
+		// HTTP header stuff
+		{
+			url: APIurl,
+			method: "POST",
+			headers: {"content-type": "application/json"},
+			// stringifies object and puts into HTTP request body as JSON
+			json: requestObject,
+		},
+		// callback function for API request
+		APIcallback
+	);
+	// Get tags from API
+	function APIcallback(err, APIresponse, body) {
+		var tags = "";
+		if ((err) || (APIresponse.statusCode != 200)) {
+			console.log("Got API error");
+		} else {
+			APIresponseJSON = body.responses[0].labelAnnotations;
+
+			// For each tag, concatenate into a string
+			for(var i = 0; i < APIresponseJSON.length; i++){
+				// console.log(APIresponseJSON[i].description);
+				tags += APIresponseJSON[i].description + ", ";
+			}
+			// Insert into the database
+			DBop.insertIntoDB(fname, tags, browserResponse);
+
+			// Send response back to browser
+			browserResponse.status(201);
+			browserResponse.type("json");
+			browserResponse.send(APIresponseJSON);
+		}
+	}
+}
+
+function getFake(fname, browserResponse) {
+	// send fake
+	var fake = { labelAnnotations: [
+		{ mid: '/m/026bk', description: 'fakeLabel1', score: 0.89219457 },
+		{ mid: '/m/05qjc', description: 'fakeLabel2', score: 0.87477195 },
+		{ mid: '/m/06ntj', description: 'fakeLabel3', score: 0.7928342 },
+		{ mid: '/m/02jjt', description: 'fakeLabel4', score: 0.7739482 },
+		{ mid: '/m/02_5v2', description: 'fakeLabel5', score: 0.70231736 }]};
+	APIresponseJSON = fake.labelAnnotations;
+	var tags = "";
+	// For each tag, concatenate into a string
+	for(var i = 0; i < APIresponseJSON.length; i++){
+		// console.log(APIresponseJSON[i].description);
+		tags += APIresponseJSON[i].description + ", ";
+	}
+	// Insert into the database
+	DBop.insertIntoDB(fname, tags, browserResponse);
+
+	// Send response back to browser
+	browserResponse.status(201);
+	browserResponse.type("json");
+	browserResponse.send(APIresponseJSON);
+}
+
 // Case 3: Uploading images
 app.post("/", function(browserRequest, browserResponse){
 	// Check incoming form and figures out what files are inside
@@ -45,65 +120,21 @@ app.post("/", function(browserRequest, browserResponse){
 
 		// When a file is fully received, get tags from Google Cloud Vision API and add to database
 		form.on('end', function (){
-			// An object that gets stringified and sent to the API in the body of an HTTP request
-			var requestObject = { 
-				"requests": [ {
-					"image": { "source": {"imageUri": url + "/photo/" + file.name} },
-					"features": [{ "type": "LABEL_DETECTION" }]
-				} ]
+			console.log("File received");
+			if (LIVE) {
+				// Get real tags from Google
+				getGCV(file.name, browserResponse);
+			} else {
+				// Get fake tags
+				getFake(file.name, browserResponse);
 			}
-
-			// URL containing the API key 
-			APIurl = 'https://vision.googleapis.com/v1/images:annotate?key=AIzaSyDmqfn4_ar6jhgKNbvno7mKCIUhD7fOkKk';
-
-			// Makes a request to the API, Uses the Node request module, which packs up and sends off an XMLHttpRequest. 
-			request(
-				// HTTP header stuff
-			    { 
-					url: APIurl,
-					method: "POST",
-					headers: {"content-type": "application/json"},
-					// stringifies object and puts into HTTP request body as JSON 
-					json: requestObject,
-			    },
-			    // callback function for API request
-			    APIcallback
-			);
-
-
-			// Get tags from API
-			var tags = "";
-			function APIcallback(err, APIresponse, body) {
-		    	if ((err) || (APIresponse.statusCode != 200)) {
-					console.log("Got API error"); 
-		    	} else {
-					APIresponseJSON = body.responses[0].labelAnnotations;
-
-					// For each tag, concatenate into a string
-					for(var i = 0; i < APIresponseJSON.length; i++){
-						// console.log(APIresponseJSON[i].description);
-						tags += APIresponseJSON[i].description + ", ";  
-					}
-					// Insert into the database
-					DBop.insertIntoDB(file.name, tags, browserResponse); 
-
-					// Send response back to browser
-					browserResponse.status(200);
-					browserResponse.type("json");
-					browserResponse.send(APIresponseJSON);
-		    	}
-			}
-
-		
 		});
 	});
 });
 
 
 // Use your own port!
-app.listen(12520);
-
-
+app.listen(port);
 
 // Respond to browser by sending HTTP response with the given status code and message
 function sendCode(code, response, message) {
