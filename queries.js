@@ -1,5 +1,5 @@
 var DBop = require("./DBOps");
-
+var fs = require('fs');
 // Table was created with:
 // CREATE TABLE PhotoLabels (fileName TEXT UNIQUE NOT NULL PRIMARY KEY, labels TEXT, favorite INTEGER)
 
@@ -31,6 +31,19 @@ function answer(query, response){
 	// dump
 	else if(queryObj.op === "dump"){
 		DBop.dumpDB(response);
+	}
+	// if file exists
+	else if(queryObj.op === "exists"){
+		var fname = queryObj.img;
+		if (fs.existsSync(__dirname + "/public/photo/" + fname)===true) {
+			console.log("duplicate");
+			response.status(500);
+			response.send("duplicate file");
+		} else {
+			console.log("not duplicate file");
+			response.status(200);
+			response.send("OK");
+		}
 	}
 }
 
