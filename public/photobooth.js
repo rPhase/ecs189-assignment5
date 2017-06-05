@@ -1,19 +1,19 @@
 // var url = "http://138.68.25.50:10298";  // Ryan's
-// var url = "http://localhost:10298";
-var url = "http://138.68.25.50:12520";  // Lanh's
+var url = "http://localhost:10298";
+//var url = "http://138.68.25.50:12520";  // Lanh's
 
 var numPhoto;
-dumpDB2();
+dumpDB();
 
 
 // Dump all images from the database onto the browser
-function dumpDB2(){
+function dumpDB(){
 	// Send a request to dump
 	var urlToDumpDB = url + "/query?op=dump";
 	var oReq = new XMLHttpRequest();
 	oReq.open("GET", urlToDumpDB);
 
-	// When response comes back, 
+	// When response comes back,
 	oReq.onload = function() {
 		// console.log("try processing");
 
@@ -25,73 +25,98 @@ function dumpDB2(){
 		var photoMain = document.getElementById("photoMain");
 		for (i = 0; i < DBphotos.length; i++) {
 			// console.log(DBphotos[i]);
-			photoMain.appendChild(createPhotoBox(DBphotos[i], i));
+			var newBox = createPhotoBox(DBphotos[i], i);
+			if (photoMain.firstElementChild == null){
+				photoMain.appendChild(newBox);
+			} else {
+				photoMain.insertBefore(newBox, photoMain.firstElementChild);
+			}
 		}
 	}
 	oReq.send();  // Send request
 }
 
-
 // Upload selected file and display image
 function readUploadFile() {
 	// Select the file
 	var selectedFile = document.getElementById('fileSelector').files[0];
-	// console.log(selectedFile.name);
+	var checkURL = url + "/query?img="+selectedFile.name+"&op=exists";
+	// Send a GET request to check for file
+	var xReq = new XMLHttpRequest();
+	xReq.addEventListener("load", reqListener);
+	xReq.open("GET", checkURL);
+	function reqListener() {
+		if (xReq.status == 500) {
+			alert("Duplcate file");
+		} else {
+			var imgObj = { filename: "", labels: "" };
+			var photoMain = document.getElementById("photoMain");
+			var tempPhotoBox = document.createElement("div");
 
-  	var imgObj = { filename: "", labels: "" };
-  	var photoMain = document.getElementById("photoMain");
-	var tempPhotoBox = document.createElement("div");
+			// Use FileReader to read the selected file
+			var fr = new FileReader();
 
-  	// Use FileReader to read the selected file
-  	var fr = new FileReader();
+			// When reading file is finished, display faded image and upload bar
+			fr.onload = function () {
+				imgObj.fileName = selectedFile.name;
 
-  	// When reading file is finished, display faded image and upload bar
-  	fr.onload = function () {
-		imgObj.fileName = selectedFile.name;
-		
-		// Display faded imaged while it is uploading
-		var image = document.createElement("img");
-		image.src = fr.result;
-		image.className = "photo";
-		image.style.opacity = 0.5;
-		tempPhotoBox.className = "photoBox";
+				// Display faded imaged while it is uploading
+				var image = document.createElement("img");
+				image.src = fr.result;
+				image.className = "photo";
+				image.style.opacity = 0.5;
+				tempPhotoBox.className = "photoBox";
 
-		// Display upload bar
+				// Display upload bar
 
 
-		// Append
-		tempPhotoBox.appendChild(image);
-		photoMain.appendChild(tempPhotoBox);
-		
+				// Append
+				tempPhotoBox.appendChild(image);
+				photoMain.appendChild(tempPhotoBox);
+				if (photoMain.firstElementChild == null){
+					photoMain.appendChild(tempPhotoBox);
+				} else {
+					photoMain.insertBefore(tempPhotoBox, photoMain.firstElementChild);
+				}
 
-  	};
-  	fr.readAsDataURL(selectedFile);  // Begin reading file
 
-	// Use FormData to send file over to insert into database
-	var formData = new FormData();
-	formData.append("userfile", selectedFile);  // stick the file into the form
+			};
+			fr.readAsDataURL(selectedFile);  // Begin reading file
 
-	// Send a POST request to upload file to database
-	var oReq = new XMLHttpRequest();
-	oReq.open("POST", url, true);
+			// Use FormData to send file over to insert into database
+			var formData = new FormData();
+			formData.append("userfile", selectedFile);  // stick the file into the form
 
-	// When a response comes back, delete faded image, create a photo box, add tags from API
-	oReq.onload = function() {
-		// Parse API object (contains tags)
-		var APILabels = JSON.parse(this.responseText);
-		for(var i = 0; i < APILabels.length; i++){
-			imgObj.labels += APILabels[i].description + ", ";
-			// console.log(APILabels[i].description);
+			// Send a POST request to upload file to database
+			var oReq = new XMLHttpRequest();
+			oReq.open("POST", url, true);
+
+			// When a response comes back, delete faded image, create a photo box, add tags from API
+			oReq.onload = function() {
+				// Parse API object (contains tags)
+				var APILabels = JSON.parse(this.responseText);
+				for(var i = 0; i < APILabels.length; i++){
+					imgObj.labels += APILabels[i].description + ", ";
+					// console.log(APILabels[i].description);
+				}
+
+				// Delete faded image
+				tempPhotoBox.parentNode.removeChild(tempPhotoBox);
+
+				// Create a new photo box and append to the main photo container
+				numPhoto = numPhoto + 1;
+				var newBox = createPhotoBox(imgObj, numPhoto);
+				// photoMain.appendChild(createPhotoBox(imgObj, numPhoto));
+				if (photoMain.firstElementChild == null){
+					photoMain.appendChild(newBox);
+				} else {
+					photoMain.insertBefore(newBox, photoMain.firstElementChild);
+				}
+			}
+			oReq.send(formData);  // Send request
 		}
-
-		// Delete faded image
-		tempPhotoBox.parentNode.removeChild(tempPhotoBox);
-
-		// Create a new photo box and append to the main photo container
-		numPhoto = numPhoto + 1;
-		photoMain.appendChild(createPhotoBox(imgObj, numPhoto));
-	}
-	oReq.send(formData);  // Send request
+	};
+	xReq.send();
 }
 
 
@@ -100,10 +125,10 @@ function createPhotoBox(entry, id) {
 	fname = entry.fileName;
 	labels = entry.labels;
 
-	// Create photo box 
+	// Create photo box
 	var photoBox = document.createElement("div");
 	photoBox.className = "photoBox";
-	photoBox.id = "photoBox " + id;
+	photoBox.id = "photoBox-" + id;
 
 	// Create options box and append to photo box; Contains the image and the hamburger buttons
 	var photoBoxOptions = document.createElement("div");
@@ -179,7 +204,7 @@ function appendOpenHam(photoBoxOptions, id) {
 	input.type = "image";
 	input.className = "hamburger";
 	input.src = "./photobooth/optionsTriangle.png";
-	
+
 	// Create div for input (hamburger image)
 	var burger = document.createElement("div");
 	burger.className = "burger";
@@ -250,7 +275,7 @@ function newTag(tag, fname) {
 	var img = document.createElement("img");  // delIcon
 	img.className = "delIcon";
 	img.src = "./photobooth/removeTagButton.png";
-	
+
 	// Create text
 	var p = document.createElement("p");  // tag
 	p.className = "tag";
@@ -369,15 +394,15 @@ function filterPhotos(){
 	var photoBoxes = photoMain.getElementsByClassName("photoBox");
 	var input = document.getElementById("filterInput");
 	console.log("FILTER " + input.value);
-	
+
 	// For each photo box
 	for(var i = 0; i < photoBoxes.length; i++){
 		// Hide all photo boxes; Don't display any photo boxes yet
-		photoBoxes[i].style.display = "none";  
+		photoBoxes[i].style.display = "none";
 
 		// Get all tags in each photo box
 		var tags = photoBoxes[i].getElementsByClassName("tag");
-		
+
 		// For each tag in the photo box
 		for(var j = 0; j < tags.length; j++){
 			// Make it lowercase to filter easily
@@ -390,7 +415,7 @@ function filterPhotos(){
 				break;
 			}
 		}
-		
+
 	}
 }
 
@@ -403,7 +428,7 @@ function clearFilter(){
 
 	// For each photo box
 	for(var i = 0; i < photoBoxes.length; i++){
-		photoBoxes[i].style.display = "inline";  		
+		photoBoxes[i].style.display = "inline";
 	}
 }
 
@@ -417,8 +442,5 @@ function toggleSidebar(option) {
     	acc.style.display = "none";
   	} else {
     	acc.style.display = "block";
-  	}	
+  	}
 }
-
-
-
