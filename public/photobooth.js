@@ -1,9 +1,17 @@
-// var url = "http://138.68.25.50:10298";  // Ryan's
-var url = "http://localhost:10298";
-//var url = "http://138.68.25.50:12520";  // Lanh's
+var port = 10298; // Ryan's
+// var port = 12520; // Lanh's
+var url = "http://localhost:"+port;
+// var url = "http://138.68.25.50:"+port; 
 
 var numPhoto;
-dumpDB();
+// dumpDB();
+
+// When the enter button on the splash page is clicked, enter the photobooth app
+function enterApp(){
+	// Change the href to enter the app and display all photos from the database
+	window.location.href = url + "/photobooth.html";
+	dumpDB();
+}
 
 
 // Dump all images from the database onto the browser

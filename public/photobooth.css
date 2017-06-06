@@ -1,3 +1,20 @@
+/*splash*/
+
+#splash {
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	height:100vh; 
+}
+
+#splashBtn {
+	width: 150px;
+	margin: 50px;
+}
+
+
 /* title */
 body {
 	font-family: "Goudy Oldstyle Std" ,"Times New Roman", serif;

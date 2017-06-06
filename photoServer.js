@@ -1,7 +1,7 @@
-var port = 10298;
-// var url = "http://138.68.25.50:10298";  // Ryan's
+var port = 10298; // Ryan's
+// var port = 12520; // Lanh's
 var url = "http://localhost:"+port;
-//var url = "http://138.68.25.50:12520";  // Lanh's
+// var url = "http://138.68.25.50:"+port; 
 
 // Require some outside javascript files
 var DBop = require("./DBOps");
