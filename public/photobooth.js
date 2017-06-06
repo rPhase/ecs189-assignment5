@@ -1,16 +1,16 @@
 var port = 10298; // Ryan's
 // var port = 12520; // Lanh's
 var url = "http://localhost:"+port;
-// var url = "http://138.68.25.50:"+port; 
+// var url = "http://138.68.25.50:"+port;
 
 var numPhoto;
-// dumpDB();
+dumpDB();
 
 // When the enter button on the splash page is clicked, enter the photobooth app
 function enterApp(){
 	// Change the href to enter the app and display all photos from the database
 	window.location.href = url + "/photobooth.html";
-	dumpDB();
+	// dumpDB();
 }
 
 
@@ -332,14 +332,13 @@ function addLabelDB(imgName, id) {
 
 	// Get tag from text box, remove leading and trailing whitespace, and URL encode the label
 	var label = document.getElementById('labelTextBox-'+id).value;
-	label = label.replace(/\s+/g, ' ').trim();
-	label = encodeURIComponent(label);
+	label = label.replace(/\s+/g, ' ').trim().toLowerCase();
+	var encode_label = encodeURIComponent(label);
 
 	if (label) {
 		// URL to make a request to add tag
 		var opString = "&op=add";
-		var new_url = url + start + imgName + "&label=" +label + opString;
-		// console.log(new_url);
+		var new_url = url + start + imgName + "&label=" + encode_label + opString;
 	} else {
 		alert("Invalid Label.");
 		return;
@@ -347,11 +346,13 @@ function addLabelDB(imgName, id) {
 
 	// Callback function when a response comes back
 	function reqListener () {
-		// TODO check for proper deletion from db
-		// alert(this.responseText);
 		// Create tag and append to tags div
-		var container = document.getElementById("tagContainer-"+id);
-		container.appendChild(newTag(label, imgName));
+		if (this.status != 200) {
+			alert(this.responseText);
+		} else {
+			var container = document.getElementById("tagContainer-"+id);
+			container.appendChild(newTag(label, imgName));
+		}
 	}
 
 	// Send a GET request to add tag
@@ -382,10 +383,12 @@ function deleteLabelDB(imgName, label, div) {
 
 	// Callback function when a response comes back
 	function reqListener () {
-		// TODO check for proper deletion from db
-		// alert(this.responseText);
-		// Remove tag from tags div
-		div.parentNode.removeChild(div);
+		if (this.status != 200) {
+			alert(this.responseText);
+		} else {
+			// Remove tag from tags div
+			div.parentNode.removeChild(div);
+		}
 	}
 
 	// Send a GET request to delete tag
@@ -400,8 +403,10 @@ function deleteLabelDB(imgName, label, div) {
 function filterPhotos(){
 	var photoMain = document.getElementById("photoMain");
 	var photoBoxes = photoMain.getElementsByClassName("photoBox");
-	var input = document.getElementById("filterInput");
-	console.log("FILTER " + input.value);
+	var input = document.getElementById("filterInput").value;
+	// Remove leading and trailing whitespace and URL encode the label
+	input = input.replace(/\s+/g, ' ').trim().toLowerCase();
+	console.log("FILTER " + input);
 
 	// For each photo box
 	for(var i = 0; i < photoBoxes.length; i++){
@@ -415,10 +420,9 @@ function filterPhotos(){
 		for(var j = 0; j < tags.length; j++){
 			// Make it lowercase to filter easily
 			tags[j].innerHTML = tags[j].innerHTML.toLowerCase();
-			input.value = input.value.toLowerCase();
 
 			// If a tag matches the filter input, display photo box
-			if(tags[j].innerHTML === input.value){
+			if(tags[j].innerHTML === input){
 				photoBoxes[i].style.display = "inline";
 				break;
 			}
@@ -429,7 +433,7 @@ function filterPhotos(){
 
 
 
-//
+// Clear the filtering and display all the photos
 function clearFilter(){
 	var photoMain = document.getElementById("photoMain");
 	var photoBoxes = photoMain.getElementsByClassName("photoBox");

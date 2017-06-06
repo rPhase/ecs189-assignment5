@@ -58,7 +58,7 @@ function addNewLabel(queryObj, response){
 				var arrayLabel = data.labels.split(", ");
 				if (arrayLabel.indexOf(newLabel)!=-1) {
 					console.log("duplicate label\n");
-					// TODO
+					sendCode(401, response, "Duplicate Label.");
 					// Maybe respond later so the user knows about duplicate tags
 				} else {
 					var labelString;
@@ -180,6 +180,12 @@ function dumpDB(response) {
 			response.send(tableData);
 		}
 	}
+}
+
+// Respond to browser by sending HTTP response with the given status code and message
+function sendCode(code, response, message) {
+    response.status(code);
+    response.send(message);
 }
 
 // Let the outside see these functions
