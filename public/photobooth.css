@@ -228,6 +228,10 @@ p.tag {
 	font-size: 18px;
 }
 
+#fileName {
+	padding: 25px 0 5px 3px;
+}
+
 
 button {
 	font-family: inherit;
