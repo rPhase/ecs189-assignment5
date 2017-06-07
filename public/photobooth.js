@@ -1,7 +1,7 @@
 var port = 10298; // Ryan's
 // var port = 12520; // Lanh's
-var url = "http://localhost:"+port;
-// var url = "http://138.68.25.50:"+port;
+// var url = "http://localhost:"+port;
+var url = "http://138.68.25.50:"+port;
 
 var numPhoto;
 dumpDB();
