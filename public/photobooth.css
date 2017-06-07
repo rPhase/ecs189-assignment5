@@ -260,7 +260,7 @@ button.drop {
 }
 
 /* plus button */
-div.dropContainer p {
+/*#plus {
 	font-size: 30px;
 	height: 50px;
 	width: 50px;
@@ -268,7 +268,7 @@ div.dropContainer p {
 	display: flex;
 	align-items: center;
 	justify-content: space-around;
-}
+}*/
 
 img.dropImg {
 	height: 50px;
@@ -315,4 +315,11 @@ img.dropImg {
 
 #enterBtn {
 	margin-right: 15px;
+}
+
+/* Mobile View */
+@media screen and (max-width: 480px) {
+	#sidebar {
+		display: none!important;
+	}
 }

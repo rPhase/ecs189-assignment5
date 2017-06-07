@@ -10,7 +10,6 @@ dumpDB();
 function enterApp(){
 	// Change the href to enter the app and display all photos from the database
 	window.location.href = url + "/photobooth.html";
-	// dumpDB();
 }
 
 
