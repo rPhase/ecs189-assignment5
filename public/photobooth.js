@@ -55,9 +55,9 @@ function readUploadFile() {
 	xReq.open("GET", checkURL);
 	function reqListener() {
 		if (xReq.status == 500) {
-			alert("Duplcate file");
+			alert("ERROR: Duplicate file");
 		} else {
-			var imgObj = { filename: "", labels: "" };
+			var imgObj = { filename: "", labels: "", favorite: 0 };
 			var photoMain = document.getElementById("photoMain");
 			var tempPhotoBox = document.createElement("div");
 
@@ -132,6 +132,7 @@ function readUploadFile() {
 function createPhotoBox(entry, id) {
 	fname = entry.fileName;
 	labels = entry.labels;
+	fav = entry.favorite;
 
 	// Create photo box
 	var photoBox = document.createElement("div");
@@ -151,7 +152,7 @@ function createPhotoBox(entry, id) {
 
 	// Appened both open and closed options box (hamburger menus)
 	appendClosedHam(photoBoxOptions, id);
-	appendOpenHam(photoBoxOptions, id);
+	appendOpenHam(photoBoxOptions, fname, id, fav);
 
 	// Create tags box (which has tags, text box, and add button) and append to photo box
 	var tagOptions = document.createElement("div");
@@ -189,7 +190,7 @@ function appendClosedHam(photoBoxOptions, id) {
 
 
 // append the opened hamburger menu
-function appendOpenHam(photoBoxOptions, id) {
+function appendOpenHam(photoBoxOptions, fname, id, fav) {
 	// Create div for open hamburger menu and option buttons
 	var openOptions = document.createElement("div");
 	openOptions.className = "openOptions";
@@ -203,9 +204,14 @@ function appendOpenHam(photoBoxOptions, id) {
 
 	// Create favorites button
 	var buttonFav = document.createElement("button");
-	buttonFav.onclick = "";
+	buttonFav.onclick = function () {toggleFavorite(fname, id);};
 	buttonFav.className = "buttonOptions";
-	buttonFav.innerText = "add to favorites";
+	buttonFav.id = "buttonFav-" + id;
+	if (fav == 0) {
+		buttonFav.innerText = "add to favorites";
+	} else {
+		buttonFav.innerText = "unfavorite";
+	}
 
 	// Create input, which is an image (hamburger image)
 	var input = document.createElement("input");
@@ -325,6 +331,35 @@ function appendAddButton(tagOptions, fname, id) {
 	buttonAdd.onclick = function() {addLabelDB(fname, id);}
 }
 
+function toggleFavorite(fname, id) {
+	var button = document.getElementById('buttonFav-'+id);
+
+	// create the proper query url to set the favorite
+	if (button.textContent == 'add to favorites') {
+		var new_url = url + "/query?img=" + fname + "&op=favorite";
+	} else {
+		var new_url = url + "/query?img=" + fname + "&op=unfavorite";
+	}
+
+	// Callback function when a response comes back
+	function reqListener () {
+		if (this.status != 200) {
+			alert(this.responseText);
+		} else {
+			if (button.textContent == 'add to favorites') {
+				button.textContent = 'unfavorite';
+			} else {
+				button.textContent = 'add to favorites';
+			}
+		}
+	}
+
+	// Send a GET request to set favorite
+	var oReq = new XMLHttpRequest();
+	oReq.addEventListener("load", reqListener);
+	oReq.open("GET", new_url);
+	oReq.send();
+}
 
 // Add tag to database
 function addLabelDB(imgName, id) {
@@ -427,11 +462,31 @@ function filterPhotos(){
 				break;
 			}
 		}
-
 	}
 }
 
+function showFavorites() {
+	var photoMain = document.getElementById("photoMain");
+	var photoBoxes = photoMain.getElementsByClassName("photoBox");
+	var favorites = document.getElementById("favorites");
 
+	if (favorites.style.color == "yellow") {
+		clearFilter();
+		favorites.style.color = ""
+	} else {
+		favorites.style.color = "yellow"
+		// For each photo box
+		for(var i = 0; i < photoBoxes.length; i++) {
+			var button = photoBoxes[i].getElementsByClassName("buttonOptions")[1];
+			if (button.textContent == 'unfavorite') {
+				photoBoxes[i].style.display = "inline";
+			}
+			else {
+				photoBoxes[i].style.display = "none";
+			}
+		}
+	}
+}
 
 // Clear the filtering and display all the photos
 function clearFilter(){
