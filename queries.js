@@ -28,6 +28,14 @@ function answer(query, response){
 	else if(queryObj.op === "getLabels"){
 		DBop.displayLabels(queryObj, response);
 	}
+	// set favorite
+	else if(queryObj.op === "favorite"){
+		DBop.setFavorite(queryObj, response, 1);
+	}
+	// remove favorite
+	else if(queryObj.op === "unfavorite"){
+		DBop.setFavorite(queryObj, response, 0);
+	}
 	// dump
 	else if(queryObj.op === "dump"){
 		DBop.dumpDB(response);

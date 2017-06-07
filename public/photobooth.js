@@ -1,7 +1,7 @@
-// var port = 10298; // Ryan's
-var port = 12520; // Lanh's
-// var url = "http://localhost:"+port;
-var url = "http://138.68.25.50:"+port; 
+var port = 10298; // Ryan's
+// var port = 12520; // Lanh's
+var url = "http://localhost:"+port;
+// var url = "http://138.68.25.50:"+port;
 
 var numPhoto;
 dumpDB();
@@ -10,7 +10,7 @@ dumpDB();
 function enterApp(){
 	// Change the href to enter the app and display all photos from the database
 	window.location.href = url + "/photobooth.html";
-	dumpDB();
+	// dumpDB();
 }
 
 
@@ -63,9 +63,9 @@ function readUploadFile() {
 	xReq.open("GET", checkURL);
 	function reqListener() {
 		if (xReq.status == 500) {
-			alert("Duplcate file");
+			alert("ERROR: Duplicate file");
 		} else {
-			var imgObj = { filename: "", labels: "" };
+			var imgObj = { filename: "", labels: "", favorite: 0 };
 			var photoMain = document.getElementById("photoMain");
 			var tempPhotoBox = document.createElement("div");
 
@@ -140,6 +140,7 @@ function readUploadFile() {
 function createPhotoBox(entry, id) {
 	fname = entry.fileName;
 	labels = entry.labels;
+	fav = entry.favorite;
 
 	// Create photo box
 	var photoBox = document.createElement("div");
@@ -157,9 +158,12 @@ function createPhotoBox(entry, id) {
 	photo.src = "./photo/" + fname;
 	photoBoxOptions.appendChild(photo);
 
+	var wrapper = document.createElement("div");
+	wrapper.className = "wrapper";
+	photoBoxOptions.appendChild(wrapper);
 	// Appened both open and closed options box (hamburger menus)
-	appendClosedHam(photoBoxOptions, id);
-	appendOpenHam(photoBoxOptions, id);
+	appendClosedHam(wrapper, id);
+	appendOpenHam(wrapper, fname, id, fav);
 
 	// Create tags box (which has tags, text box, and add button) and append to photo box
 	var tagOptions = document.createElement("div");
@@ -197,7 +201,7 @@ function appendClosedHam(photoBoxOptions, id) {
 
 
 // append the opened hamburger menu
-function appendOpenHam(photoBoxOptions, id) {
+function appendOpenHam(photoBoxOptions, fname, id, fav) {
 	// Create div for open hamburger menu and option buttons
 	var openOptions = document.createElement("div");
 	openOptions.className = "openOptions";
@@ -211,9 +215,14 @@ function appendOpenHam(photoBoxOptions, id) {
 
 	// Create favorites button
 	var buttonFav = document.createElement("button");
-	buttonFav.onclick = "";
+	buttonFav.onclick = function () {toggleFavorite(fname, id);};
 	buttonFav.className = "buttonOptions";
-	buttonFav.innerText = "add to favorites";
+	buttonFav.id = "buttonFav-" + id;
+	if (fav == 0) {
+		buttonFav.innerText = "add to favorites";
+	} else {
+		buttonFav.innerText = "unfavorite";
+	}
 
 	// Create input, which is an image (hamburger image)
 	var input = document.createElement("input");
@@ -333,6 +342,35 @@ function appendAddButton(tagOptions, fname, id) {
 	buttonAdd.onclick = function() {addLabelDB(fname, id);}
 }
 
+function toggleFavorite(fname, id) {
+	var button = document.getElementById('buttonFav-'+id);
+
+	// create the proper query url to set the favorite
+	if (button.textContent == 'add to favorites') {
+		var new_url = url + "/query?img=" + fname + "&op=favorite";
+	} else {
+		var new_url = url + "/query?img=" + fname + "&op=unfavorite";
+	}
+
+	// Callback function when a response comes back
+	function reqListener () {
+		if (this.status != 200) {
+			alert(this.responseText);
+		} else {
+			if (button.textContent == 'add to favorites') {
+				button.textContent = 'unfavorite';
+			} else {
+				button.textContent = 'add to favorites';
+			}
+		}
+	}
+
+	// Send a GET request to set favorite
+	var oReq = new XMLHttpRequest();
+	oReq.addEventListener("load", reqListener);
+	oReq.open("GET", new_url);
+	oReq.send();
+}
 
 // Add tag to database
 function addLabelDB(imgName, id) {
@@ -340,14 +378,13 @@ function addLabelDB(imgName, id) {
 
 	// Get tag from text box, remove leading and trailing whitespace, and URL encode the label
 	var label = document.getElementById('labelTextBox-'+id).value;
-	label = label.replace(/\s+/g, ' ').trim();
-	label = encodeURIComponent(label);
+	label = label.replace(/\s+/g, ' ').trim().toLowerCase();
+	var encode_label = encodeURIComponent(label);
 
 	if (label) {
 		// URL to make a request to add tag
 		var opString = "&op=add";
-		var new_url = url + start + imgName + "&label=" +label + opString;
-		// console.log(new_url);
+		var new_url = url + start + imgName + "&label=" + encode_label + opString;
 	} else {
 		alert("Invalid Label.");
 		return;
@@ -355,11 +392,13 @@ function addLabelDB(imgName, id) {
 
 	// Callback function when a response comes back
 	function reqListener () {
-		// TODO check for proper deletion from db
-		// alert(this.responseText);
 		// Create tag and append to tags div
-		var container = document.getElementById("tagContainer-"+id);
-		container.appendChild(newTag(label, imgName));
+		if (this.status != 200) {
+			alert(this.responseText);
+		} else {
+			var container = document.getElementById("tagContainer-"+id);
+			container.appendChild(newTag(label, imgName));
+		}
 	}
 
 	// Send a GET request to add tag
@@ -390,10 +429,12 @@ function deleteLabelDB(imgName, label, div) {
 
 	// Callback function when a response comes back
 	function reqListener () {
-		// TODO check for proper deletion from db
-		// alert(this.responseText);
-		// Remove tag from tags div
-		div.parentNode.removeChild(div);
+		if (this.status != 200) {
+			alert(this.responseText);
+		} else {
+			// Remove tag from tags div
+			div.parentNode.removeChild(div);
+		}
 	}
 
 	// Send a GET request to delete tag
@@ -408,8 +449,10 @@ function deleteLabelDB(imgName, label, div) {
 function filterPhotos(){
 	var photoMain = document.getElementById("photoMain");
 	var photoBoxes = photoMain.getElementsByClassName("photoBox");
-	var input = document.getElementById("filterInput");
-	console.log("FILTER " + input.value);
+	var input = document.getElementById("filterInput").value;
+	// Remove leading and trailing whitespace and URL encode the label
+	input = input.replace(/\s+/g, ' ').trim().toLowerCase();
+	console.log("FILTER " + input);
 
 	// For each photo box
 	for(var i = 0; i < photoBoxes.length; i++){
@@ -423,21 +466,40 @@ function filterPhotos(){
 		for(var j = 0; j < tags.length; j++){
 			// Make it lowercase to filter easily
 			tags[j].innerHTML = tags[j].innerHTML.toLowerCase();
-			input.value = input.value.toLowerCase();
 
 			// If a tag matches the filter input, display photo box
-			if(tags[j].innerHTML === input.value){
+			if(tags[j].innerHTML === input){
 				photoBoxes[i].style.display = "inline";
 				break;
 			}
 		}
-
 	}
 }
 
+function showFavorites() {
+	var photoMain = document.getElementById("photoMain");
+	var photoBoxes = photoMain.getElementsByClassName("photoBox");
+	var favorites = document.getElementById("favorites");
 
+	if (favorites.style.color == "yellow") {
+		clearFilter();
+		favorites.style.color = ""
+	} else {
+		favorites.style.color = "yellow"
+		// For each photo box
+		for(var i = 0; i < photoBoxes.length; i++) {
+			var button = photoBoxes[i].getElementsByClassName("buttonOptions")[1];
+			if (button.textContent == 'unfavorite') {
+				photoBoxes[i].style.display = "inline";
+			}
+			else {
+				photoBoxes[i].style.display = "none";
+			}
+		}
+	}
+}
 
-//
+// Clear the filtering and display all the photos
 function clearFilter(){
 	var photoMain = document.getElementById("photoMain");
 	var photoBoxes = photoMain.getElementsByClassName("photoBox");

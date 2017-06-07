@@ -58,7 +58,7 @@ function addNewLabel(queryObj, response){
 				var arrayLabel = data.labels.split(", ");
 				if (arrayLabel.indexOf(newLabel)!=-1) {
 					console.log("duplicate label\n");
-					// TODO
+					sendCode(401, response, "Duplicate Label.");
 					// Maybe respond later so the user knows about duplicate tags
 				} else {
 					var labelString;
@@ -182,9 +182,41 @@ function dumpDB(response) {
 	}
 }
 
+// Set favorites
+function setFavorite(queryObj, response, value) {
+	var imageFile = queryObj.img;
+	// update the favorite boolean with value
+	db.run(
+		'UPDATE photoLabels SET favorite = ? WHERE fileName = ?',
+		[value, imageFile],
+		updateCallback);
+
+	// Also define this inside queries so it knows about response object
+	function updateCallback(err) {
+		if (value == 1) {
+			var msg = "Added " + imageFile + " to favorites";
+			console.log(msg +"\n");
+		} else {
+			var msg = "Removed " + imageFile + " from favorites";
+			console.log(msg +"\n");
+		}
+		if (err) {
+			console.log("error: ", err , "\n");
+			sendCode(400, response, "Requested photo not found");
+		} else {
+			// Done adding, send response to browser
+			response.status(200);
+			response.type("text/plain");
+			response.send(msg);
+		}
+	}
+}
+
+
 // Let the outside see these functions
 exports.insertIntoDB = insertIntoDB;
 exports.addNewLabel = addNewLabel;
 exports.deleteLabel = deleteLabel;
 exports.displayLabels = displayLabels;
+exports.setFavorite = setFavorite;
 exports.dumpDB = dumpDB;
