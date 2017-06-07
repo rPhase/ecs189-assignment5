@@ -1,7 +1,7 @@
 var port = 10298; // Ryan's
 // var port = 12520; // Lanh's
-var url = "http://localhost:"+port;
-// var url = "http://138.68.25.50:"+port;
+// var url = "http://localhost:"+port;
+var url = "http://138.68.25.50:"+port;
 
 var numPhoto;
 dumpDB();
@@ -62,18 +62,17 @@ function readUploadFile(type) {
 	// Select the file
 	if (type === "mobile") {
 		var selectedFile = document.getElementById('fileSelector-mobile').files[0];
-		// Reset file name
 		var filename = document.getElementById("fileName-mobile");
-		filename.innerHTML = "no file selected";
 	} else {
 		var selectedFile = document.getElementById('fileSelector').files[0];
-		// Reset file name
 		var filename = document.getElementById("fileName");
-		filename.innerHTML = "no file selected";
 	}
-	if (selectedFile == undefined) {
+	if (filename.innerHTML == "no file selected") {
 		alert("No file selected");
+		return;
 	}
+	// Reset file name
+	filename.innerHTML = "no file selected";
 	var checkURL = url + "/query?img="+selectedFile.name+"&op=exists";
 	// Send a GET request to check for file
 	var xReq = new XMLHttpRequest();
@@ -140,7 +139,7 @@ function readUploadFile(type) {
 			   		var progress = (e.loaded/e.total) * 100;
 		        	progressBar.style.width =  progress + '%';
 			    }
-		    	
+
 		    }, false);
 
 
@@ -626,4 +625,3 @@ function toggleMobile(option) {
   	acc.style.display = "block";
 	}
 }
-

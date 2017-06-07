@@ -201,7 +201,7 @@ p.tag {
 #progress {
  	width: 20%;
  	background: #885541;
- 	height: 20px;  
+ 	height: 20px;
  }
 
 
@@ -211,7 +211,11 @@ p.tag {
 #sidebar {
 	width: 250px;
 	background-color: #885541;
+<<<<<<< HEAD
 	height: 100vh;
+=======
+	min-height: 90vh;
+>>>>>>> 1c6f6bddf3f861425a82fa8522a1ccdb42e8422e
 	/*position: absolute;*/
 	/*bottom: 0px;*/
 	/*right: 0px;*/

@@ -1,7 +1,7 @@
 var port = 10298; // Ryan's
 // var port = 12520; // Lanh's
-var url = "http://localhost:"+port;
-// var url = "http://138.68.25.50:"+port;
+// var url = "http://localhost:"+port;
+var url = "http://138.68.25.50:"+port;
 
 // Require some outside javascript files
 var DBop = require("./DBOps");
@@ -32,7 +32,7 @@ app.get("/query", function(request, response){
 });
 
 
-var LIVE = false;
+var LIVE = true;
 // URL containing the API key
 var APIurl = 'https://vision.googleapis.com/v1/images:annotate?key=AIzaSyDmqfn4_ar6jhgKNbvno7mKCIUhD7fOkKk';
 
