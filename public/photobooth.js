@@ -150,9 +150,12 @@ function createPhotoBox(entry, id) {
 	photo.src = "./photo/" + fname;
 	photoBoxOptions.appendChild(photo);
 
+	var wrapper = document.createElement("div");
+	wrapper.className = "wrapper";
+	photoBoxOptions.appendChild(wrapper);
 	// Appened both open and closed options box (hamburger menus)
-	appendClosedHam(photoBoxOptions, id);
-	appendOpenHam(photoBoxOptions, fname, id, fav);
+	appendClosedHam(wrapper, id);
+	appendOpenHam(wrapper, fname, id, fav);
 
 	// Create tags box (which has tags, text box, and add button) and append to photo box
 	var tagOptions = document.createElement("div");

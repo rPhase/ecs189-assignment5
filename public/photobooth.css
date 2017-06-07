@@ -6,7 +6,7 @@
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	height:100vh; 
+	height:100vh;
 }
 
 #splashBtn {
@@ -94,14 +94,16 @@ img {
 	/*display: block;*/
 }
 
-
+.wrapper {
+	position: relative;
+}
 
 .closedOptions{
 	display: inline-block;
 	/*display: none;*/
 	/* HARD CODE */
-	position: relative;
-	bottom: 60px;
+	position: absolute;
+	bottom: 0px;
 	left: 210px;
 }
 
@@ -113,9 +115,9 @@ img {
 	background-color: #885541;
 
 	/* HARD CODE */
-	position: relative;
-	bottom: 122px;
-	left: 113px;
+	position: absolute;
+	bottom: 2px;
+	left: 112px;
 }
 
 button.buttonOptions{
