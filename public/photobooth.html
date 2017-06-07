@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width">
+	<meta name="viewport" content="width=device-width"/>
 	<title>Photobooth</title>
 	<link rel="stylesheet" type="text/css" href="reset.css">
 	<link rel="stylesheet" href="photobooth.css">
@@ -14,52 +14,78 @@
 </header>
 
 <main>
-  <!--Photos-->
-	<div id="photoMain">
-		<!-- <div class="photoBox"> -->
-  </div>
-
-  <!--Sidebar-->
-	<div id="sidebar">
-		<!--Upload-->
-    <div class="dropContainer">
-      <button class="drop" onclick="toggleSidebar('upload')">
-				<p>+</p>
-				upload
-			</button>
-    </div>
+	<div id=mobileBox>
+		<img class='dropImg' alt="filterIcon" src="./photobooth/uploadIcon-01.svg" onclick= "toggleMobile('upload-mobile')">
+		<img class='dropImg' alt="filterIcon" src="./photobooth/filterIcon-01.svg" onclick= "toggleMobile('filter-mobile')">
+		<img class='dropImg' alt="favoritesIcon" src="./photobooth/favoritesIcon.svg" onclick= "showFavorites()">
 		<!-- The upload form -->
-    <div id="upload">
-			<input type="file" name="fileSelector" id="fileSelector" onchange="updateFilename()">
-      <label for="fileSelector">choose file...</label>
-      <p id="fileName">no file selected</p>
-      <button class="brownBtn" id="uploadBtn" onclick="readUploadFile()">upload</button>
-    </div>
+		<div id="upload-mobile" class = "openContainer">
+			<input type="file" name="fileSelector" id="fileSelector-mobile" onchange="updateFilename('mobile')">
+			<label for="fileSelector-mobile">choose file...</label>
+			<p id="fileName-mobile">no file selected</p>
+			<button class="brownBtn" id="uploadBtn-mobile" onclick="readUploadFile('mobile')">upload</button>
+		</div>
 
-    <!--Filter-->
-    <div class="dropContainer">
-      <button class="drop" onclick="toggleSidebar('filter')">
-				<img class='dropImg' alt="filterIcon" src="./photobooth/filterIcon-01.svg">
-				filter
-			</button>
-    </div>
+		<!-- The filter form -->
+		<div id="filter-mobile" class = "openContainer">
+			<input type="text" id="filterInput-mobile">
+			<br>
+			<button class="brownBtn" id="enterBtn-mobile" onclick="filterPhotos('mobile')">enter</button>
+			<button class="brownBtn" id="clearBtn-mobile" onclick="clearFilter()">clear filter</button>
+		</div>
+
+		<!-- Favorites -->
+
+	</div>
+
+	<div id="aroundMain">
+		<!--Photos-->
+		<div id="photoMain">
+			<!-- <div class="photoBox"> -->
+		</div>
+
+		<!--Sidebar-->
+		<div id="sidebar">
+			<!--Upload-->
+			<div class="dropContainer">
+				<button class="drop" onclick="toggleSidebar('upload')">
+					<img class='dropImg' alt="filterIcon" src="./photobooth/uploadIcon-01.svg">
+					upload
+				</button>
+			</div>
+			<!-- The upload form -->
+			<div id="upload" class = "openContainer">
+				<input type="file" name="fileSelector" id="fileSelector" onchange="updateFilename('regular')">
+				<label for="fileSelector">choose file...</label>
+				<p id="fileName">no file selected</p>
+				<button class="brownBtn" id="uploadBtn" onclick="readUploadFile('regular')">upload</button>
+			</div>
+
+			<!--Filter-->
+			<div class="dropContainer">
+				<button class="drop" onclick="toggleSidebar('filter')">
+					<img class='dropImg' alt="filterIcon" src="./photobooth/filterIcon-01.svg">
+					filter
+				</button>
+			</div>
 
 
-    <div id="filter">
-      <input type="text" id="filterInput">
-      <br>
-      <button class="brownBtn" id="enterBtn" onclick="filterPhotos()">enter</button>
-      <button class="brownBtn" id="clearBtn" onclick="clearFilter()">clear filter</button>
-    </div>
+			<div id="filter" class = "openContainer">
+				<input type="text" id="filterInput">
+				<br>
+				<button class="brownBtn" id="enterBtn" onclick="filterPhotos('regular')">enter</button>
+				<button class="brownBtn" id="clearBtn" onclick="clearFilter()">clear filter</button>
+			</div>
 
-    <!--Favorites-->
-    <div class="dropContainer">
-      <button class="drop" id="favorites" onclick="showFavorites()">
-				<img class='dropImg' alt="favoritesIcon" src="./photobooth/favoritesIcon.svg">
-				favorites
-			</button>
-    </div>
+			<!--Favorites-->
+			<div class="dropContainer">
+				<button class="drop" id="favorites" onclick="showFavorites()">
+					<img class='dropImg' alt="favoritesIcon" src="./photobooth/favoritesIcon.svg">
+					favorites
+				</button>
+			</div>
 
+		</div>
 	</div>
 </main>
 

@@ -10,7 +10,6 @@ dumpDB();
 function enterApp(){
 	// Change the href to enter the app and display all photos from the database
 	window.location.href = url + "/photobooth.html";
-	// dumpDB();
 }
 
 
@@ -46,20 +45,35 @@ function dumpDB(){
 
 
 // Change filename display when a file is selected
-function updateFilename(){
-	var selectedFile = document.getElementById('fileSelector').files[0];
-	var filename = document.getElementById("fileName");
-	filename.innerHTML = selectedFile.name;
+function updateFilename(type){
+	if (type === "mobile") {
+		var selectedFile = document.getElementById('fileSelector-mobile').files[0];
+		var filename_mobile = document.getElementById("fileName-mobile");
+		filename_mobile.innerHTML = selectedFile.name;
+	} else {
+		var selectedFile = document.getElementById('fileSelector').files[0];
+		var filename = document.getElementById("fileName");
+		filename.innerHTML = selectedFile.name;
+	}
 }
 
 // Upload selected file and display image
-function readUploadFile() {
-	// Reset file name
-	var filename = document.getElementById("fileName");
-	filename.innerHTML = "no file selected";
-
+function readUploadFile(type) {
 	// Select the file
-	var selectedFile = document.getElementById('fileSelector').files[0];
+	if (type === "mobile") {
+		var selectedFile = document.getElementById('fileSelector-mobile').files[0];
+		// Reset file name
+		var filename = document.getElementById("fileName-mobile");
+		filename.innerHTML = "no file selected";
+	} else {
+		var selectedFile = document.getElementById('fileSelector').files[0];
+		// Reset file name
+		var filename = document.getElementById("fileName");
+		filename.innerHTML = "no file selected";
+	}
+	if (selectedFile == undefined) {
+		alert("No file selected");
+	}
 	var checkURL = url + "/query?img="+selectedFile.name+"&op=exists";
 	// Send a GET request to check for file
 	var xReq = new XMLHttpRequest();
@@ -67,7 +81,8 @@ function readUploadFile() {
 	xReq.open("GET", checkURL);
 	function reqListener() {
 		if (xReq.status == 500) {
-			alert("ERROR: Duplicate file");
+			alert(xReq.responseText);
+			// alert("ERROR: Duplicate file");
 		} else {
 			var imgObj = { filename: "", labels: "", favorite: 0 };
 			var photoMain = document.getElementById("photoMain");
@@ -510,10 +525,14 @@ function deleteLabelDB(imgName, label, div) {
 
 
 // Filter photos; Show the photo boxes that have a tag that matches and hide the ones that doesn't
-function filterPhotos(){
+function filterPhotos(type){
+	if (type === "mobile") {
+		var input = document.getElementById("filterInput-mobile").value;
+	} else {
+		var input = document.getElementById("filterInput").value;
+	}
 	var photoMain = document.getElementById("photoMain");
 	var photoBoxes = photoMain.getElementsByClassName("photoBox");
-	var input = document.getElementById("filterInput").value;
 	// Remove leading and trailing whitespace and URL encode the label
 	input = input.replace(/\s+/g, ' ').trim().toLowerCase();
 	console.log("FILTER " + input);
@@ -586,3 +605,25 @@ function toggleSidebar(option) {
     	acc.style.display = "block";
   	}
 }
+
+// Toggle upload and filter button to open and close for MOBILE
+function toggleMobile(option) {
+	var up = document.getElementById("upload-mobile");
+	var fil = document.getElementById("filter-mobile");
+
+	/* Toggle between hiding and showing the active panel */
+	if (option === "upload-mobile") {
+		fil.style.display = "none";
+		var acc = up;
+	} else {
+		up.style.display = "none";
+		var acc = fil;
+	}
+
+	if (acc.style.display === "block") {
+  	acc.style.display = "none";
+	} else {
+  	acc.style.display = "block";
+	}
+}
+
