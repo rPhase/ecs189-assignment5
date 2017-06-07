@@ -54,6 +54,10 @@ function updateFilename(){
 
 // Upload selected file and display image
 function readUploadFile() {
+	// Reset file name
+	var filename = document.getElementById("fileName");
+	filename.innerHTML = "no file selected";
+
 	// Select the file
 	var selectedFile = document.getElementById('fileSelector').files[0];
 	var checkURL = url + "/query?img="+selectedFile.name+"&op=exists";
