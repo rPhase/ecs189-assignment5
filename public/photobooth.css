@@ -211,6 +211,7 @@ p.tag {
 #sidebar {
 	width: 250px;
 	background-color: #885541;
+	height: 100vh;
 	/*position: absolute;*/
 	/*bottom: 0px;*/
 	/*right: 0px;*/
