@@ -146,6 +146,7 @@ button.buttonOptions{
 }
 
 .labelTextBox {
+	display: none;
 	font-family: inherit;
 	font-size: 18px;
 	/*background-color: red;*/
@@ -158,6 +159,7 @@ button.buttonOptions{
 	flex-wrap: wrap;
 	border: 2px solid #502f1f;
 	padding: 4px;
+	/*background-color: #ba9a8a;*/
 	/*border-bottom: 0px;*/
 }
 
@@ -168,7 +170,12 @@ button.buttonOptions{
 	margin: 4px 4px;
 }
 
+.spacer {
+	width: 18px;
+}
+
 img.delIcon {
+	display:none;
 	width: 15px;
 	float: left;
 	clear: both;
@@ -190,6 +197,10 @@ p.tag {
 #sidebar {
 	width: 250px;
 	background-color: #885541;
+	/*position: absolute;*/
+	/*bottom: 0px;*/
+	/*right: 0px;*/
+	/*top: 105px;*/
 }
 
 #upload {
@@ -279,6 +290,7 @@ img.dropImg {
 }
 
 .addButton{
+	display: none;
 	background-color: #885641;
 	color: #ffffff;
 	font-weight: 600;
