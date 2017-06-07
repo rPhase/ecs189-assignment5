@@ -1,7 +1,7 @@
 var port = 10298; // Ryan's
 // var port = 12520; // Lanh's
 var url = "http://localhost:"+port;
-// var url = "http://138.68.25.50:"+port; 
+// var url = "http://138.68.25.50:"+port;
 
 // Require some outside javascript files
 var DBop = require("./DBOps");
@@ -126,7 +126,7 @@ app.post("/", function(browserRequest, browserResponse){
 				getGCV(file.name, browserResponse);
 			} else {
 				// Get fake tags
-				getFake(file.name, browserResponse);
+				setTimeout(function(){getFake(file.name, browserResponse);}, 1500);
 			}
 		});
 	});
