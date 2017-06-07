@@ -83,11 +83,16 @@ function readUploadFile() {
 				image.style.opacity = 0.5;
 				tempPhotoBox.className = "photoBox";
 
-				// Display upload bar
-
+				// Create upload bar
+				var progressOuter = document.createElement('div');
+				var progress = document.createElement('div');
+				progressOuter.appendChild(progress);
+				progressOuter.id = "progressOuter";
+				progress.id = "progress";
 
 				// Append
 				tempPhotoBox.appendChild(image);
+				tempPhotoBox.appendChild(progressOuter);
 				photoMain.appendChild(tempPhotoBox);
 				if (photoMain.firstElementChild == null){
 					photoMain.appendChild(tempPhotoBox);
@@ -106,6 +111,19 @@ function readUploadFile() {
 			// Send a POST request to upload file to database
 			var oReq = new XMLHttpRequest();
 			oReq.open("POST", url, true);
+
+
+			// While uploading, display upload progress bar
+		    oReq.upload.addEventListener('progress', function(e){
+		    	var progressBar = document.getElementById("progress");
+		    	// Compute percent done and set progress bar width to percent done
+		    	if (e.lengthComputable) {
+			   		var progress = (e.loaded/e.total) * 100;
+		        	progressBar.style.width =  progress + '%';
+			    }
+		    	
+		    }, false);
+
 
 			// When a response comes back, delete faded image, create a photo box, add tags from API
 			oReq.onload = function() {
