@@ -197,17 +197,35 @@ p.tag {
 	color: #885541;
 }
 
-#fileName {
-	font-weight: 600;
-	font-size: 18px;
-	padding: 10px;
-}
-
 #filter {
 	display: none;
 	background-color: rgb(196, 173, 162);
 	padding: 15px;
 }
+
+
+
+#fileSelector {  /*Hide button*/
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+
+#fileSelector + label {
+    background-color: #885541;
+	color: #ffffff;
+	font-weight: 600;
+	border: #5c3328 2px solid;
+	margin-top: 10px;
+	margin-bottom: 5px;
+	padding: 5px;
+	font-size: 18px;
+}
+
 
 button {
 	font-family: inherit;
@@ -221,6 +239,7 @@ button.drop {
 	font-weight: 600;
 	font-size: 25px;
 	border: none;
+	width: 250px;
 }
 
 /* plus button */

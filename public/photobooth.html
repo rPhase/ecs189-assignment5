@@ -30,9 +30,9 @@
     </div>
 		<!-- The upload form -->
     <div id="upload">
-      <!-- <button class="brownBtn" id="chooseFileBtn">choose file...</button> -->
-			<input type="file" id="fileSelector">
-      <p id="fileName">filename.jpg</p>
+			<input type="file" name="fileSelector" id="fileSelector" onchange="updateFilename()">
+      <label for="fileSelector">choose file...</label>
+      <p id="fileName">no file selected</p>
       <button class="brownBtn" id="uploadBtn" onclick="readUploadFile()">upload</button>
     </div>
 

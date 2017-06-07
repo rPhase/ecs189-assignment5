@@ -1,10 +1,10 @@
-var port = 10298; // Ryan's
-// var port = 12520; // Lanh's
-var url = "http://localhost:"+port;
-// var url = "http://138.68.25.50:"+port; 
+// var port = 10298; // Ryan's
+var port = 12520; // Lanh's
+// var url = "http://localhost:"+port;
+var url = "http://138.68.25.50:"+port; 
 
 var numPhoto;
-// dumpDB();
+dumpDB();
 
 // When the enter button on the splash page is clicked, enter the photobooth app
 function enterApp(){
@@ -42,6 +42,14 @@ function dumpDB(){
 		}
 	}
 	oReq.send();  // Send request
+}
+
+
+// Change filename display when a file is selected
+function updateFilename(){
+	var selectedFile = document.getElementById('fileSelector').files[0];
+	var filename = document.getElementById("fileName");
+	filename.innerHTML = selectedFile.name;
 }
 
 // Upload selected file and display image
