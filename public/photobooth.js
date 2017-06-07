@@ -209,7 +209,7 @@ function appendOpenHam(photoBoxOptions, fname, id, fav) {
 
 	// Create change tags button
 	var buttonTag = document.createElement("button");
-	buttonTag.onclick = "";
+	buttonTag.onclick = function() {toggleTags(id);};
 	buttonTag.className = "buttonOptions";
 	buttonTag.innerText = "change tags";
 
@@ -248,6 +248,39 @@ function appendOpenHam(photoBoxOptions, fname, id, fav) {
 }
 
 
+function toggleTags(id) {
+	var container = document.getElementById('tagContainer-'+id);
+	var textBox = document.getElementById('labelTextBox-'+id);
+	var button = document.getElementById('addButton-'+id);
+
+	// if change tags is off
+	if (button.style.display == "") {
+		// show the change tag options
+		container.style.backgroundColor = "#ba9a8a";
+		for (var i = 0; i < container.children.length; i++) {
+			// spacer
+			container.children[i].children[0].style.width="0px";
+			// button
+			container.children[i].children[1].style.display = "inline";
+		}
+		container.style.borderBottom = "0px";
+		textBox.style.display = 'inline';
+		button.style.display = 'inline';
+	} else {
+		// hide the change tag options
+		container.style.backgroundColor = "";
+		for (var i = 0; i < container.children.length; i++) {
+			// spacer
+			container.children[i].children[0].style.width = "18px";
+			// button
+			container.children[i].children[1].style.display = "";
+		}
+		container.style.borderBottom = "2px solid";
+		textBox.style.display = "";
+		button.style.display = "";
+	}
+}
+
 // Toggle the full hamburger menu on
 function toggleHamOn(id) {
 	var open = document.getElementById('openOptions-' + id);
@@ -269,24 +302,25 @@ function toggleHamOff(id) {
 // Append tags into tags box
 function tagContainer(tagOptions, labels, fname, id){
 	// Array of tags/labels
-  	var labelsArr = labels.split(", ");
+	var labelsArr = labels.split(", ");
 
-  	// Create div for tags and append to tags box
-  	var container = document.createElement("div");
-  	container.className = "tagContainer";
+	// Create div for tags and append to tags box
+	var container = document.createElement("div");
+	container.className = "tagContainer";
 	container.id = "tagContainer-"+id;
 	tagOptions.appendChild(container);
 
-  	// For each tag
-	// console.log("length:"+labelsArr.length);
-  	for(var i = 0; i < labelsArr.length; i++){
-    	var tag = labelsArr[i];
-		// console.log(tag);
+  // For each tag
+	for(var i = 0; i < labelsArr.length; i++){
+  	var tag = labelsArr[i];
 		// Create tag and append tag to tags div
 		if (tag!=""){
-			container.appendChild(newTag(tag, fname));
+			var someTag = newTag(tag, fname);
+			someTag.children[0].style.width = "18px";
+			someTag.children[1].style.display = "";
+			container.appendChild(someTag);
 		}
-  	}
+	}
 }
 
 
@@ -296,10 +330,16 @@ function newTag(tag, fname) {
 	var div = document.createElement("div");  // tags
 	div.className = "tags";
 
+	// Add a spacer in place of button
+	var spacer = document.createElement("div");
+	spacer.className = 'spacer';
+	spacer.style.width = "0px";
+
 	// Create image, which is the delete icon
 	var img = document.createElement("img");  // delIcon
 	img.className = "delIcon";
 	img.src = "./photobooth/removeTagButton.png";
+	img.style.display = "inline";
 
 	// Create text
 	var p = document.createElement("p");  // tag
@@ -307,6 +347,7 @@ function newTag(tag, fname) {
 	p.innerText = tag;
 
 	// Append delete icon and text to div
+	div.appendChild(spacer);
 	div.appendChild(img);
 	div.appendChild(p);
 
@@ -334,6 +375,7 @@ function appendAddButton(tagOptions, fname, id) {
 	var someDiv = document.createElement("div");
 	var buttonAdd = document.createElement("button");
 	buttonAdd.className = "addButton";
+	buttonAdd.id = "addButton-" + id;
 	buttonAdd.innerText = "Add";
 	someDiv.appendChild(buttonAdd);
 	tagOptions.appendChild(someDiv);

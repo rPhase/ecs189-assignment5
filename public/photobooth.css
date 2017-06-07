@@ -183,6 +183,15 @@ p.tag {
 	line-height: normal;
 }
 
+#progress_outer {
+ 	border: 1px solid #885541;
+}
+#progress {
+ 	width: 20%;
+ 	background: #885541;
+ 	height: 20px;  
+ }
+
 
 
 /*sidebar*/
